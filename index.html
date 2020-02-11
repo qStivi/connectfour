@@ -88,6 +88,7 @@
         $('#room').submit(function (e) {
             e.preventDefault();
             socket.emit('create room', name.val());
+            document.getElementById('room').style.display = 'none';
             return false;
         });
     });
