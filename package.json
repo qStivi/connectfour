@@ -1,6 +1,12 @@
 {
   "name": "connectfour",
-  "version": "0",
+  "version": "0.0.1",
+  "description": "Connect four for CS-Class",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/stivi313131/connectfour.git"
+  },
+  "license": "MIT",
   "dependencies": {
     "connect-four": "0.0.6",
     "express": "^4.17.1",
