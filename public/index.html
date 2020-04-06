@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Socket.IO Chat Example</title>
+    <link href="style.css" rel="stylesheet">
+</head>
+<body>
+
+<div class="login page">
+    <div class="form">
+        <h3 class="title">What's your nickname?</h3>
+        <label>
+            <input class="usernameInput" maxlength="14" type="text"/>
+        </label>
+    </div>
+</div>
+
+<div class="connectfour">
+    <div class="table">
+        <div class="column">
+            <div class="cell" coords="0:5">
+                <div class="chip"></div>
+            </div>
+            <div class="cell" coords="0:4">
+                <div class="chip"></div>
+            </div>
+            <div class="cell" coords="0:3">
+                <div class="chip"></div>
+            </div>
+            <div class="cell" coords="0:2">
+                <div class="chip"></div>
+            </div>
+            <div class="cell" coords="0:1">
+                <div class="chip"></div>
+            </div>
+            <div class="cell" coords="0:0">
+                <div class="chip"></div>
+            </div>
+        </div>
+        <div class="column">
+            <div class="cell" coords="1:5">
+                <div class="chip"></div>
+            </div>
+            <div class="cell" coords="1:4">
+                <div class="chip"></div>
+            </div>
+            <div class="cell" coords="1:3">
+                <div class="chip"></div>
+            </div>
+            <div class="cell" coords="1:2">
+                <div class="chip"></div>
+            </div>
+            <div class="cell" coords="1:1">
+                <div class="chip"></div>
+            </div>
+            <div class="cell" coords="1:0">
+                <div class="chip"></div>
+            </div>
+        </div>
+        <div class="column">
+            <div class="cell" coords="2:5">
+                <div class="chip"></div>
+            </div>
+            <div class="cell" coords="2:4">
+                <div class="chip"></div>
+            </div>
+            <div class="cell" coords="2:3">
+                <div class="chip"></div>
+            </div>
+            <div class="cell" coords="2:2">
+                <div class="chip"></div>
+            </div>
+            <div class="cell" coords="2:1">
+                <div class="chip"></div>
+            </div>
+            <div class="cell" coords="2:0">
+                <div class="chip"></div>
+            </div>
+        </div>
+        <div class="column">
+            <div class="cell" coords="3:5">
+                <div class="chip"></div>
+            </div>
+            <div class="cell" coords="3:4">
+                <div class="chip"></div>
+            </div>
+            <div class="cell" coords="3:3">
+                <div class="chip"></div>
+            </div>
+            <div class="cell" coords="3:2">
+                <div class="chip"></div>
+            </div>
+            <div class="cell" coords="3:1">
+                <div class="chip"></div>
+            </div>
+            <div class="cell" coords="3:0">
+                <div class="chip"></div>
+            </div>
+        </div>
+        <div class="column">
+            <div class="cell" coords="4:5">
+                <div class="chip"></div>
+            </div>
+            <div class="cell" coords="4:4">
+                <div class="chip"></div>
+            </div>
+            <div class="cell" coords="4:3">
+                <div class="chip"></div>
+            </div>
+            <div class="cell" coords="4:2">
+                <div class="chip"></div>
+            </div>
+            <div class="cell" coords="4:1">
+                <div class="chip"></div>
+            </div>
+            <div class="cell" coords="4:0">
+                <div class="chip"></div>
+            </div>
+        </div>
+        <div class="column">
+            <div class="cell" coords="5:5">
+                <div class="chip"></div>
+            </div>
+            <div class="cell" coords="5:4">
+                <div class="chip"></div>
+            </div>
+            <div class="cell" coords="5:3">
+                <div class="chip"></div>
+            </div>
+            <div class="cell" coords="5:2">
+                <div class="chip"></div>
+            </div>
+            <div class="cell" coords="5:1">
+                <div class="chip"></div>
+            </div>
+            <div class="cell" coords="5:0">
+                <div class="chip"></div>
+            </div>
+        </div>
+        <div class="column">
+            <div class="cell" coords="6:5">
+                <div class="chip"></div>
+            </div>
+            <div class="cell" coords="6:4">
+                <div class="chip"></div>
+            </div>
+            <div class="cell" coords="6:3">
+                <div class="chip"></div>
+            </div>
+            <div class="cell" coords="6:2">
+                <div class="chip"></div>
+            </div>
+            <div class="cell" coords="6:1">
+                <div class="chip"></div>
+            </div>
+            <div class="cell" coords="6:0">
+                <div class="chip"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="chatBox">
+    <ul class="pages">
+        <li class="chat">
+            <div class="chatArea">
+                <ul class="messages"></ul>
+            </div>
+            <label>
+                <input class="inputMessage" placeholder="Type here..."/>
+            </label>
+        </li>
+    </ul>
+</div>
+
+<script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+<script src="/socket.io/socket.io.js"></script>
+<script src="/js.js"></script>
+</body>
+</html>

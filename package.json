@@ -2,6 +2,7 @@
   "name": "connectfour",
   "version": "0.0.1",
   "description": "Connect four for CS-Class",
+  "main": "index.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/stivi313131/connectfour.git"
@@ -11,5 +12,8 @@
     "connect-four": "0.0.6",
     "express": "^4.17.1",
     "socket.io": "^2.3.0"
+  },
+  "scripts": {
+    "start": "node index.js"
   }
 }

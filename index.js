@@ -1,38 +1,76 @@
-const app = require('express')();
-const http = require('http').createServer(app);
-const io = require('socket.io')(http);
-let roomName;
+// Setup basic express server
+var express = require('express');
+var app = express();
+var path = require('path');
+var server = require('http').createServer(app);
+var io = require('socket.io')(server);
+var port = process.env.PORT || 3000;
 
-app.get('/', function(req, res){
-    res.sendFile(__dirname + '/index.html');
+server.listen(port, () => {
+    console.log('Server listening at port %d', port);
 });
 
-io.on('connection', function(socket){
-    socket.leaveAll();
-    console.log('a user connected');
+// Routing
+app.use(express.static(path.join(__dirname, 'public')));
 
-    socket.on('create room', function (room) {
-        console.log('creating room... ' + room);
-        socket.join(room);
-        console.log('room ' + room + ' created');
-        roomName = room;
+// Chatroom
+
+var numUsers = 0;
+
+io.on('connection', (socket) => {
+    var addedUser = false;
+
+    // when the client emits 'new message', this listens and executes
+    socket.on('new message', (data) => {
+        // we tell the client to execute 'new message'
+        socket.broadcast.emit('new message', {
+            username: socket.username,
+            message: data
+        });
     });
 
+    // when the client emits 'add user', this listens and executes
+    socket.on('add user', (username) => {
+        if (addedUser) return;
 
-    socket.on('disconnect', function () {
-        roomName = 'üpoiuztrewqasdfghjklö.,mnbvcxysertzuiolkjgvd"§$%&/()OPOLJHGFTE$%$%/(ZU'; // leave room
-        console.log('user disconnected');
+        // we store the username in the socket session for this client
+        socket.username = username;
+        ++numUsers;
+        addedUser = true;
+        socket.emit('login', {
+            numUsers: numUsers
+        });
+        // echo globally (all clients) that a person has connected
+        socket.broadcast.emit('user joined', {
+            username: socket.username,
+            numUsers: numUsers
+        });
     });
-    socket.on('chat message', function (msg) {
-        console.log(socket.rooms[0] + ': message: ' + msg);
-        io.to(roomName).emit('chat message', msg);
+
+    // when the client emits 'typing', we broadcast it to others
+    socket.on('typing', () => {
+        socket.broadcast.emit('typing', {
+            username: socket.username
+        });
+    });
+
+    // when the client emits 'stop typing', we broadcast it to others
+    socket.on('stop typing', () => {
+        socket.broadcast.emit('stop typing', {
+            username: socket.username
+        });
+    });
+
+    // when the user disconnects.. perform this
+    socket.on('disconnect', () => {
+        if (addedUser) {
+            --numUsers;
+
+            // echo globally that this client has left
+            socket.broadcast.emit('user left', {
+                username: socket.username,
+                numUsers: numUsers
+            });
+        }
     });
 });
-
-http.listen(3000, function () {
-    console.log('listening on *:3000');
-});
-
-function randomInt(low, high) {
-    return Math.floor(Math.random() * (high - low + 1) + low)
-}
