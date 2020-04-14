@@ -37,7 +37,7 @@ ul {
     /* height: 100%; */
     /* margin-left: 80%; */
     padding: 0;
-    width: 100%;
+    width: 200%;
     display: block;
 }
 
@@ -61,6 +61,7 @@ ul {
     text-align: center;
     top: 50%;
     width: 100%;
+    z-index: 1;
 }
 
 .login.page .form .usernameInput {
@@ -92,6 +93,16 @@ ul {
 }
 /*lol*/
 .table {
+    display: inline-block;
+    float: right;
+    -webkit-transform:scale(0.9);
+    -moz-transform:scale(0.9);
+    -ms-transform:scale(0.9);
+    transform:scale(0.85);
+    margin-top: -2.5%;
+    margin-right: 0;
+    margin-left: 32%;
+    position: fixed;
 }
 
 .column {
@@ -101,10 +112,11 @@ ul {
 .cell {
     border-color: black;
     border-width: 3px;
-    border-radius: 3px;
+    border-radius: 100px;
     border-style: solid;
     width: 100px;
     height: 100px;
+    margin-top: 4%;
 }
 
 /* Chat page */
@@ -117,12 +129,13 @@ ul {
 }
 
 .chatBox {
-    /* float: left; */
+    float: top;
 }
 
 /* Font */
 
 .messages {
+    width: 10%;
     font-size: 150%;
 }
 
@@ -142,13 +155,14 @@ ul {
 .chatArea {
     height: 100%;
     padding-bottom: 60px;
+    width: 1000%;
 }
 
 .messages {
     height: 100%;
     margin: 0;
     overflow-y: scroll;
-    padding: 10px 20px 10px 20px;
+    padding: 10px 20px 0 20px;
 }
 
 .message.typing .messageBody {
