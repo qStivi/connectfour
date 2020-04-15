@@ -289,8 +289,11 @@ $(function () {
         log('attempt to reconnect has failed');
     });
 
-});
+    $('div').on('click', function () {
+        if ($(this).hasClass('column')) {
+            socket.emit('gameClick', $(this).attr('id'), username)
+        }
+    });
 
-function clickCol(col) {
-    console.log(col);
-}
+
+});

@@ -107,4 +107,9 @@ io.on('connection', (socket) => {
             });
         }
     });
+
+    socket.on('gameClick', (id, username) => {
+        console.log(id);
+        console.log(username);
+    });
 });
