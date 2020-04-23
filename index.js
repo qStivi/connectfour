@@ -109,7 +109,6 @@ io.on('connection', (socket) => {
         var coords = coord['col'] + ':' + coord['row'];
         socket.broadcast.emit('played', coords, color);
         socket.emit('played', coords, color);
-        console.log(game.get(coord['col'], coord['row']));
         if (checkDiagonalWin()) {
             game.end(player);
         }
@@ -125,30 +124,30 @@ io.on('connection', (socket) => {
 });
 
 function checkDiagonalWin() {
-    if (game.get(0, 0) && game.get(1, 1) && game.get(2, 2) && game.get(3, 3) ||
-        game.get(1, 0) && game.get(2, 1) && game.get(3, 2) && game.get(4, 3) ||
-        game.get(2, 0) && game.get(3, 1) && game.get(4, 2) && game.get(5, 3) ||
-        game.get(3, 0) && game.get(4, 1) && game.get(5, 2) && game.get(6, 3) ||
-        game.get(0, 1) && game.get(1, 2) && game.get(2, 3) && game.get(3, 4) ||
-        game.get(1, 1) && game.get(2, 2) && game.get(3, 3) && game.get(4, 4) ||
-        game.get(2, 1) && game.get(3, 2) && game.get(4, 3) && game.get(5, 4) ||
-        game.get(3, 1) && game.get(4, 2) && game.get(5, 3) && game.get(6, 4) ||
-        game.get(0, 2) && game.get(1, 3) && game.get(2, 4) && game.get(3, 5) ||
-        game.get(1, 2) && game.get(2, 3) && game.get(3, 4) && game.get(4, 5) ||
-        game.get(2, 2) && game.get(3, 3) && game.get(4, 4) && game.get(5, 5) ||
-        game.get(3, 2) && game.get(4, 3) && game.get(5, 4) && game.get(6, 5) ||
-        game.get(6, 0) && game.get(5, 1) && game.get(4, 2) && game.get(3, 3) ||
-        game.get(5, 0) && game.get(5, 1) && game.get(5, 2) && game.get(5, 3) ||
-        game.get(4, 0) && game.get(3, 1) && game.get(2, 2) && game.get(1, 3) ||
-        game.get(3, 0) && game.get(2, 1) && game.get(1, 2) && game.get(0, 3) ||
-        game.get(6, 1) && game.get(5, 2) && game.get(4, 3) && game.get(3, 4) ||
-        game.get(5, 1) && game.get(4, 2) && game.get(3, 3) && game.get(2, 4) ||
-        game.get(4, 1) && game.get(3, 2) && game.get(2, 3) && game.get(1, 4) ||
-        game.get(3, 1) && game.get(2, 2) && game.get(1, 3) && game.get(0, 4) ||
-        game.get(6, 2) && game.get(5, 3) && game.get(4, 4) && game.get(3, 5) ||
-        game.get(5, 2) && game.get(4, 3) && game.get(3, 4) && game.get(2, 5) ||
-        game.get(4, 2) && game.get(3, 3) && game.get(2, 4) && game.get(1, 5) ||
-        game.get(3, 2) && game.get(2, 3) && game.get(1, 4) && game.get(0, 5)) {
+    if (game.get(0, 0) != null && game.get(0, 0) && game.get(1, 1) && game.get(2, 2) && game.get(3, 3) ||
+        game.get(1, 0) != null && game.get(1, 0) && game.get(2, 1) && game.get(3, 2) && game.get(4, 3) ||
+        game.get(2, 0) != null && game.get(2, 0) && game.get(3, 1) && game.get(4, 2) && game.get(5, 3) ||
+        game.get(3, 0) != null && game.get(3, 0) && game.get(4, 1) && game.get(5, 2) && game.get(6, 3) ||
+        game.get(0, 1) != null && game.get(0, 1) && game.get(1, 2) && game.get(2, 3) && game.get(3, 4) ||
+        game.get(1, 1) != null && game.get(1, 1) && game.get(2, 2) && game.get(3, 3) && game.get(4, 4) ||
+        game.get(2, 1) != null && game.get(2, 1) && game.get(3, 2) && game.get(4, 3) && game.get(5, 4) ||
+        game.get(3, 1) != null && game.get(3, 1) && game.get(4, 2) && game.get(5, 3) && game.get(6, 4) ||
+        game.get(0, 2) != null && game.get(0, 2) && game.get(1, 3) && game.get(2, 4) && game.get(3, 5) ||
+        game.get(1, 2) != null && game.get(1, 2) && game.get(2, 3) && game.get(3, 4) && game.get(4, 5) ||
+        game.get(2, 2) != null && game.get(2, 2) && game.get(3, 3) && game.get(4, 4) && game.get(5, 5) ||
+        game.get(3, 2) != null && game.get(3, 2) && game.get(4, 3) && game.get(5, 4) && game.get(6, 5) ||
+        game.get(6, 0) != null && game.get(6, 0) && game.get(5, 1) && game.get(4, 2) && game.get(3, 3) ||
+        game.get(5, 0) != null && game.get(5, 0) && game.get(5, 1) && game.get(5, 2) && game.get(5, 3) ||
+        game.get(4, 0) != null && game.get(4, 0) && game.get(3, 1) && game.get(2, 2) && game.get(1, 3) ||
+        game.get(3, 0) != null && game.get(3, 0) && game.get(2, 1) && game.get(1, 2) && game.get(0, 3) ||
+        game.get(6, 1) != null && game.get(6, 1) && game.get(5, 2) && game.get(4, 3) && game.get(3, 4) ||
+        game.get(5, 1) != null && game.get(5, 1) && game.get(4, 2) && game.get(3, 3) && game.get(2, 4) ||
+        game.get(4, 1) != null && game.get(4, 1) && game.get(3, 2) && game.get(2, 3) && game.get(1, 4) ||
+        game.get(3, 1) != null && game.get(3, 1) && game.get(2, 2) && game.get(1, 3) && game.get(0, 4) ||
+        game.get(6, 2) != null && game.get(6, 2) && game.get(5, 3) && game.get(4, 4) && game.get(3, 5) ||
+        game.get(5, 2) != null && game.get(5, 2) && game.get(4, 3) && game.get(3, 4) && game.get(2, 5) ||
+        game.get(4, 2) != null && game.get(4, 2) && game.get(3, 3) && game.get(2, 4) && game.get(1, 5) ||
+        game.get(3, 2) != null && game.get(3, 2) && game.get(2, 3) && game.get(1, 4) && game.get(0, 5)) {
         return true;
     } else {
         return false;
