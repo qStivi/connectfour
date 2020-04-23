@@ -300,7 +300,6 @@ $(function () {
 
 
     socket.on('played', function (coord, color) {
-        log(color);
         var cells = document.getElementsByClassName('cell');
         var length = cells.length;
         for (let i = 0; i < length; i++) {
@@ -313,6 +312,10 @@ $(function () {
     socket.on('end', function (winner) {
         document.getElementById("result").innerHTML = "The winner is: " + winner;
         document.getElementsByClassName("result").item(0).setAttribute("style", "display:block");
+    });
+
+    socket.on('leave', function () {
+        window.location.replace("https://google.com");
     });
 });
 
