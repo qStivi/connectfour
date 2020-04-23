@@ -203,4 +203,23 @@ ul {
 /* Result */
 .result {
     display: none;
+    background: black;
+    position: fixed;
+    z-index: 1;
+}
+
+.result .form {
+    height: 100px;
+    margin-top: -4%;
+    position: absolute;
+    text-align: center;
+    top: 50%;
+    width: 100%;
+    z-index: 1;
+    color: white;
+}
+
+h3#result.title {
+    font-weight: 100;
+    font-size: 200%;
 }
