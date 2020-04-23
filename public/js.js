@@ -16,6 +16,8 @@ $(function () {
     const $loginPage = $('.login.page'); // The login page
     const $chatPage = $('.chat.page'); // The chat room page
 
+    const $color = getRandomColor();
+
     // Prompt for setting a username
     let username;
     let connected = false;
@@ -289,11 +291,36 @@ $(function () {
         log('attempt to reconnect has failed');
     });
 
+
     $('div').on('click', function () {
         if ($(this).hasClass('column')) {
-            socket.emit('gameClick', $(this).attr('id'), username)
+            socket.emit('gameClick', $(this).attr('id'), username, $color)
         }
     });
 
 
+    socket.on('played', function (coord, color) {
+        log(color);
+        var cells = document.getElementsByClassName('cell');
+        var length = cells.length;
+        for (let i = 0; i < length; i++) {
+            if (cells.item(i).getAttribute('coords') === coord) {
+                cells.item(i).setAttribute("style", "background-color: " + color + ";");
+            }
+        }
+    });
+
+    socket.on('end', function (winner) {
+        document.getElementById("result").innerHTML = "The winner is: " + winner;
+        document.getElementsByClassName("result").item(0).setAttribute("style", "display:block");
+    });
 });
+
+function getRandomColor() {
+    var letters = '0123456789ABCDEF';
+    var color = '#';
+    for (var i = 0; i < 6; i++) {
+        color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
+}

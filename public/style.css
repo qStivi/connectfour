@@ -130,6 +130,7 @@ ul {
 }
 
 .chatBox {
+    /* margin: 50px; */
     float: top;
 }
 
@@ -189,4 +190,17 @@ ul {
     /* position: absolute; */
     /* right: 0; */
     width: 100%;
+}
+
+/* Ad */
+.ad {
+    position: fixed;
+    top: 0;
+    right: 0;
+    z-index: -1;
+}
+
+/* Result */
+.result {
+    display: none;
 }
