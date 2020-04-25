@@ -1,329 +1,435 @@
 $(function () {
-    const FADE_TIME = 150; // ms
-    const TYPING_TIMER_LENGTH = 400; // ms
-    const COLORS = [
+    
+    const FADE_TIME = 150; // 150 ms to fade the massage
+    const TYPING_TIMER_LENGTH = 400; // "typing" message only gets shown for 400 ms after users stops typing
+    const COLORS = [// each user gets a different colour
         '#e21400', '#91580f', '#f8a700', '#f78b00',
         '#58dc00', '#287b00', '#a8f07a', '#4ae8c4',
         '#3b88eb', '#3824aa', '#a700ff', '#d300e7'
     ];
 
-    // Initialize variables
-    const $window = $(window);
-    const $usernameInput = $('.usernameInput'); // Input for username
-    const $messages = $('.messages'); // Messages area
-    const $inputMessage = $('.inputMessage'); // Input message input box
+    // variables
+    const $window = $(window);// window
+    const $usernameInput = $('.usernameInput'); // username
+    const $messages = $('.messages'); // message area
+    const $inputMessage = $('.inputMessage'); // input for messages
 
-    const $loginPage = $('.login.page'); // The login page
-    const $chatPage = $('.chat.page'); // The chat room page
+    const $loginPage = $('.login.page'); // login page
+    const $chatPage = $('.chat.page'); // ConnectFour page with chat box
 
-    const $color = getRandomColor();
+    const $color = getRandomColor();// sets a random colour
 
-    // Prompt for setting a username
+    // login prompt
     let username;
     let connected = false;
     let typing = false;
     let lastTypingTime;
+    // suppressed Warning:
     // noinspection JSDeprecatedSymbols
     let $currentInput = $usernameInput.focus();
 
+    // initialize socket
     const socket = io();
 
+    // message for the number of current participants
     const addParticipantsMessage = (data) => {
-        let message = '';
-        if (data.numUsers === 1) {
+        
+        let message = '';// variable for the message
+        
+        if (data.numUsers === 1) {// singular message for one participant
             message += "there's 1 participant";
-        } else {
+        }
+        
+        else {// plural if several participants
             message += "there are " + data.numUsers + " participants";
         }
-        log(message);
+        
+        log(message);// send message to chat
     };
 
-    // Sets the client's username
+    // set username
     const setUsername = () => {
-        username = cleanInput($usernameInput.val().trim());
+        
+        username = cleanInput($usernameInput.val().trim());// remove whitespaces, markup etc. from input
 
-        // If the username is valid
+        // if username valid
         if (username) {
+            
+            // fade out login page
             $loginPage.fadeOut();
             $chatPage.show();
             $loginPage.off('click');
+            //Suppressed Warning:
             // noinspection JSDeprecatedSymbols
             $currentInput = $inputMessage.focus();
 
-            // Tell the server your username
+            // Server gets username
             socket.emit('add user', username);
         }
     };
 
-    // Sends a chat message
+    // function for sending messages
     const sendMessage = () => {
+        
+        // get input
         let message = $inputMessage.val();
-        // Prevent markup from being injected into the message
+        
+        // remove markup from message
         message = cleanInput(message);
-        // if there is a non-empty message and a socket connection
+        
+        // if message is not empty and server is connected
         if (message && connected) {
-            $inputMessage.val('');
-            addChatMessage({
+            
+            $inputMessage.val('');// input field gets emptied
+            addChatMessage({// add message to the chat
                 username: username,
                 message: message
             });
-            // tell server to execute 'new message' and send along one parameter
+            
+            // server executes "new message" and passes along the message
             socket.emit('new message', message);
         }
     };
 
-    // Log a message
+    // log message inside the chat
     const log = (message, options) => {
-        const $el = $('<li>').addClass('log').text(message);
+        
+        const $el = $('<li>').addClass('log').text(message);// message is added as html element
         addMessageElement($el, options);
     };
 
-    // Adds the visual chat message to the message list
+    // add message to chat as an element
     const addChatMessage = (data, options) => {
-        // Don't fade the message in if there is an 'X was typing'
-        const $typingMessages = getTypingMessages(data);
+        
+        // don't fade the message if someone was typing
+        const $typingMessages = getTypingMessages(data);// get current typing messages
         options = options || {};
+        
+        // if there is a message
         if ($typingMessages.length !== 0) {
-            options.fade = false;
-            $typingMessages.remove();
+            
+            options.fade = false;// don't fade
+            $typingMessages.remove();// remove "typing" element
         }
 
-        const $usernameDiv = $('<span class="username"/>')
+        // username body
+        const $usernameDiv = $('<span class="username"/>')// username with individual colour
             .text(data.username)
             .css('color', getUsernameColor(data.username));
-        const $messageBodyDiv = $('<span class="messageBody">')
+        
+        // div for the message
+        const $messageBodyDiv = $('<span class="messageBody">')// message without colour
             .text(data.message);
 
-        const typingClass = data.typing ? 'typing' : '';
+        // body for "Typing" message
+        const typingClass = data.typing ? 'typing' : '';// simple "tyoing" text
+        
+        // body for the message
         const $messageDiv = $('<li class="message"/>')
+            //contents of message
             .data('username', data.username)
             .addClass(typingClass)
             .append($usernameDiv, $messageBodyDiv);
 
-        addMessageElement($messageDiv, options);
+        addMessageElement($messageDiv, options);// add final product
     };
 
-    // Adds the visual chat typing message
+    // function for adding the "typing" message visually
     const addChatTyping = (data) => {
-        data.typing = true;
+        
+        data.typing = true;// user is typing
+        // update message accordingly
         data.message = 'is typing';
         addChatMessage(data);
     };
 
-    // Removes the visual chat typing message
+    // function for removing the "typing" message
     const removeChatTyping = (data) => {
+        
         getTypingMessages(data).fadeOut(function () {
+            
             $(this).remove();
         });
     };
 
-    // Adds a message element to the messages and scrolls to the bottom
-    // el - The element to add as a message
-    // options.fade - If the element should fade-in (default = true)
-    // options.prepend - If the element should prepend
-    //   all other messages (default = false)
+    // function for adding whole message
     const addMessageElement = (el, options) => {
+        
+        // message is parsed to this function as an element
         const $el = $(el);
 
-        // Setup default options
+        // regulate the options
+        // default, nothing happens
         if (!options) {
+            
             options = {};
         }
+        
+        // if fade was parsed, set fade to true
         if (typeof options.fade === 'undefined') {
+            
             options.fade = true;
         }
+        
+        // if prepend was parsed, set it to true
         if (typeof options.prepend === 'undefined') {
             options.prepend = false;
         }
 
-        // Apply options
+        // apply options if they are true
+        // fade in the message
         if (options.fade) {
+            
             $el.hide().fadeIn(FADE_TIME);
         }
+        
+        // prepend the message
         if (options.prepend) {
+            
             $messages.prepend($el);
-        } else {
+        } 
+        
+        // otherwise simply append the message
+        else {
+            
             $messages.append($el);
         }
+        
+        // scroll to the bottom of the chat
         $messages[0].scrollTop = $messages[0].scrollHeight;
     };
 
-    // Prevents input from having injected markup
+    // remove markup from input
     const cleanInput = (input) => {
+        
         return $('<div/>').text(input).html();
     };
 
-    // Updates the typing event
+    // update typing event
     const updateTyping = () => {
+        
+        // when server connection
         if (connected) {
+            
+            // and not typing
             if (!typing) {
-                typing = true;
-                socket.emit('typing');
+                
+                typing = true;// allow update to true
+                socket.emit('typing');// update server event
             }
+            
+            // get time of update
             lastTypingTime = (new Date()).getTime();
 
+            // set timeout for the typing message
             setTimeout(() => {
+                
+                //get current time
                 const typingTimer = (new Date()).getTime();
-                const timeDiff = typingTimer - lastTypingTime;
+                const timeDiff = typingTimer - lastTypingTime;// calculate difference in time
+                
+                // if the difference is smaller than a certain threshold
                 if (timeDiff >= TYPING_TIMER_LENGTH && typing) {
-                    socket.emit('stop typing');
-                    typing = false;
+                    
+                    socket.emit('stop typing');// update server event
+                    typing = false;// stop typing message
                 }
             }, TYPING_TIMER_LENGTH);
         }
     };
 
-    // Gets the 'X is typing' messages of a user
+    // function for getting the "typing" message
     const getTypingMessages = (data) => {
+        
+        // return message
         return $('.typing.message').filter(function () {
             return $(this).data('username') === data.username;
         });
     };
 
-    // Gets the color of a username through our hash function
+    // function for getting the colour from a user
     const getUsernameColor = (username) => {
-        // Compute hash code
+        
+        // colours get computed through a hash code
         let hash = 7;
+        
         for (let i = 0; i < username.length; i++) {
+            
             hash = username.charCodeAt(i) + (hash << 5) - hash;
         }
-        // Calculate color
+        
+        // calculate colour
         const index = Math.abs(hash % COLORS.length);
-        return COLORS[index];
+        return COLORS[index];// return colour
     };
-
-    // Keyboard events
-
+    
+    // suppress Warning:
     // noinspection JSDeprecatedSymbols
-    $window.keydown(event => {
-        // Auto-focus the current input when a key is typed
+    $window.keydown(event => {// all Keyboard events
+        
+        // focus current input
         if (!(event.ctrlKey || event.metaKey || event.altKey)) {
+            
+            // suppress Warning:
             // noinspection JSDeprecatedSymbols
             $currentInput.focus();
         }
-        // When the client hits ENTER on their keyboard
+        
+        // suppress Warning:
         // noinspection JSDeprecatedSymbols
-        if (event.which === 13) {
+        if (event.which === 13) {// if "enter" is pressed
+            
+            // if client has username
             if (username) {
-                sendMessage();
+                
+                sendMessage();//send message
+                // stop "typing" message
                 socket.emit('stop typing');
                 typing = false;
-            } else {
+            } 
+            
+            else {
+                
+                // if client has no username, set one
                 setUsername();
             }
         }
     });
 
+    // if there is an input, update "typing" message
     $inputMessage.on('input', () => {
+        
         updateTyping();
     });
 
-    // Click events
-
-    // Focus input when clicking anywhere on login page
+    // focus input when clicking login page
+    // suppress warning:
     // noinspection JSDeprecatedSymbols
     $loginPage.click(() => {
+        
+        // suppress warning:
         // noinspection JSDeprecatedSymbols
         $currentInput.focus();
     });
 
-    // Focus input when clicking on the message input's border
+    // focus input when clicking message input
+    // suppress warning:
     // noinspection JSDeprecatedSymbols
     $inputMessage.click(() => {
+        
+        // suppress warning:
         // noinspection JSDeprecatedSymbols
         $inputMessage.focus();
     });
 
-
-    // Socket events
-
-    // Whenever the server emits 'login', log the login message
+    // server emit functions
+    
+    // log a login message
     socket.on('login', (data) => {
+        
         connected = true;
-        // Display the welcome message
-        const message = "Welcome to Socket.IO Chat – ";
-        log(message, {
+        const message = "Welcome to the Chat :) ";// welcome message
+        log(message, {// log message
             prepend: true
         });
-        addParticipantsMessage(data);
+        addParticipantsMessage(data);// update participants after login
     });
 
-    // Whenever the server emits 'new message', update the chat body
+    // update chat body
     socket.on('new message', (data) => {
+        
         addChatMessage(data);
     });
 
-    // Whenever the server emits 'user joined', log it in the chat body
+    // log joined users
     socket.on('user joined', (data) => {
+        
         log(data.username + ' joined');
-        addParticipantsMessage(data);
+        addParticipantsMessage(data);// update participants
     });
 
-    // Whenever the server emits 'user left', log it in the chat body
+    // log users that have left
     socket.on('user left', (data) => {
+        
         log(data.username + ' left');
-        addParticipantsMessage(data);
+        addParticipantsMessage(data);// update participants
         removeChatTyping(data);
     });
 
-    // Whenever the server emits 'typing', show the typing message
+    // show "typing" message
     socket.on('typing', (data) => {
+        
         addChatTyping(data);
     });
 
-    // Whenever the server emits 'stop typing', kill the typing message
+    // remove "typing" message
     socket.on('stop typing', (data) => {
+        
         removeChatTyping(data);
     });
 
+    // log own disconnetcion
     socket.on('disconnect', () => {
+        
         log('you have been disconnected');
     });
 
+    // log own reconnection
     socket.on('reconnect', () => {
         log('you have been reconnected');
+        
+        // if client had a username, rejoin
         if (username) {
             socket.emit('add user', username);
         }
     });
 
+    // log reconnection error
     socket.on('reconnect_error', () => {
+        
         log('attempt to reconnect has failed');
     });
 
 
+    // if div is clicked
     $('div').on('click', function () {
-        if ($(this).hasClass('column')) {
-            socket.emit('gameClick', $(this).attr('id'), username, $color)
+        if ($(this).hasClass('column')) {// if div is a column
+            socket.emit('gameClick', $(this).attr('id'), username, $color)// click event for the game, sends coloumn, username and colour
         }
     });
 
-
+    // when someone has played
     socket.on('played', function (coord, color) {
-        var cells = document.getElementsByClassName('cell');
-        var length = cells.length;
-        for (let i = 0; i < length; i++) {
+        
+        var cells = document.getElementsByClassName('cell');//get cells
+        var length = cells.length;// get number of cells
+        for (let i = 0; i < length; i++) { // for every cell
+            
+            // if cell is the clicked one
             if (cells.item(i).getAttribute('coords') === coord) {
-                cells.item(i).setAttribute("style", "background-color: " + color + ";");
+                
+                cells.item(i).setAttribute("style", "background-color: " + color + ";");// update to the players colour
             }
         }
     });
 
+    // winner page
     socket.on('end', function (winner) {
-        document.getElementById("result").innerHTML = "The winner is: " + winner;
-        document.getElementsByClassName("result").item(0).setAttribute("style", "display:block");
-    });
-
-    socket.on('leave', function () {
-        window.location.replace("https://google.com");
+        
+        document.getElementById("result").innerHTML = "The winner is: " + winner;// show name of winner
+        document.getElementsByClassName("result").item(0).setAttribute("style", "display:block");// show winner page
     });
 });
 
+// function for creating a random number
 function getRandomColor() {
-    var letters = '0123456789ABCDEF';
-    var color = '#';
-    for (var i = 0; i < 6; i++) {
+    
+    var letters = '0123456789ABCDEF';// hexadecimals
+    var color = '#';// colours start with "#"
+    
+    for (var i = 0; i < 6; i++) {// add random letter six times
+        
         color += letters[Math.floor(Math.random() * 16)];
     }
-    return color;
+    return color;//return finished string
 }
