@@ -1,17 +1,17 @@
 <!doctype html>
 <html lang="en">
 
-<!--Header with title-->
+<!--header with title-->
 <head>
     <meta charset="UTF-8">
     <title>Connect Four</title>
     <link href="style.css" rel="stylesheet">
 </head>
     
-<!--Content-->
+<!--content-->
 <body>
     
-<!--Page for the login-->
+<!--page for the login-->
 <div class="login page">
     <div class="form">
         <h3 class="title">What's your nickname?</h3>
@@ -21,7 +21,7 @@
     </div>
 </div>
 
-<!--Page for the Result-->
+<!--page for the result-->
 <div class="result page">
     <div class="form">
         <h3 class="title" id="result"></h3>
@@ -29,17 +29,17 @@
     </div>
 </div>
 
-<!--Overlay that prevents one player from playing alone-->
+<!--overlay that prevents one player from playing alone-->
 <div class="overlay page">
 </div>
 
-<!--Area for the game-->
+<!--area for the game-->
 <div class="connectfour">
     
-    <!--Individual cells are arranged in a table consisting of 7 columns with 6 rows each-->
+    <!--individual cells are arranged in a table consisting of 7 columns with 6 rows each-->
     <div class="table">
         
-        <!-- Column 1-->
+        <!-- column 1-->
         <div class="column" id="0">
             <div class="cell" coords="0:5">
                 <div class="chip"></div>
@@ -61,7 +61,7 @@
             </div>
         </div>
         
-        <!-- Column 2-->
+        <!-- column 2-->
         <div class="column" id="1">
             <div class="cell" coords="1:5">
                 <div class="chip"></div>
@@ -83,7 +83,7 @@
             </div>
         </div>
         
-        <!-- Column 3-->
+        <!-- column 3-->
         <div class="column" id="2">
             <div class="cell" coords="2:5">
                 <div class="chip"></div>
@@ -105,7 +105,7 @@
             </div>
         </div>
         
-        <!-- Column 4-->
+        <!-- column 4-->
         <div class="column" id="3">
             <div class="cell" coords="3:5">
                 <div class="chip"></div>
@@ -127,7 +127,7 @@
             </div>
         </div>
         
-        <!-- Column 5-->
+        <!-- column 5-->
         <div class="column" id="4">
             <div class="cell" coords="4:5">
                 <div class="chip"></div>
@@ -149,7 +149,7 @@
             </div>
         </div>
         
-        <!-- Column 6-->
+        <!-- column 6-->
         <div class="column" id="5">
             <div class="cell" coords="5:5">
                 <div class="chip"></div>
@@ -171,7 +171,7 @@
             </div>
         </div>
         
-        <!-- Column 7-->
+        <!-- column 7-->
         <div class="column" id="6">
             <div class="cell" coords="6:5">
                 <div class="chip"></div>
@@ -195,7 +195,7 @@
     </div>
 </div>
 
-<!--Chat area-->
+<!--chat area-->
 <div class="chatBox">
     <ul class="pages">
         <li class="chat">
@@ -212,7 +212,7 @@
 <!--<iframe class="ad" width="560" height="315" src="https://www.youtube.com/embed/qzYBxlnBZ-0" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 </div>-->
 
-<!--Script files to be implemented-->
+<!--script files to be implemented-->
 <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
 <script src="/socket.io/socket.io.js"></script>
 <script src="/js.js"></script>
