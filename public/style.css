@@ -100,14 +100,18 @@ ul {
     -moz-transform:scale(0.9);
     -ms-transform:scale(0.9);
     transform:scale(0.85);
-    margin-top: -2.5%;
+    margin-top: -1%;
     margin-right: 0;
     margin-left: 32%;
     position: fixed;
+    width: 80%;
 }
 
 .column {
     display: inline-block;
+    border-right: solid;
+    border-width: 5px;
+    padding-right: 0.6%;
 }
 
 .cell {
@@ -123,6 +127,7 @@ ul {
 /* Chat page */
 .chat {
     width: 24%;
+    box-shadow: 18px 18px 31px -10px rgba(214,214,214,1);
 }
 
 .chat.page {
@@ -156,7 +161,7 @@ ul {
 
 .chatArea {
     height: 100%;
-    padding-bottom: 60px;
+    padding-bottom: 7%;
     width: 100%;
 }
 
@@ -222,4 +227,8 @@ ul {
 h3#result.title {
     font-weight: 100;
     font-size: 200%;
+}
+
+.header {
+    padding-left: 31.2%;
 }
