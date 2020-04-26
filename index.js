@@ -31,6 +31,8 @@ io.on('connection', (socket) => {
     var srvSockets = io.sockets.sockets;
     let addedUser = false;
 
+    socket.emit("connected");
+
     // when the client emits 'new message', this listens and executes
     socket.on('new message', (data) => {
         // we tell the client to execute 'new message'
