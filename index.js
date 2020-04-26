@@ -28,11 +28,48 @@ var prevPlayer;
 
 // once someone connects
 io.on('connection', (socket) => {
-    
+
     var srvSockets = io.sockets.sockets;// client gets added to the socket
     let addedUser = false;// boolean for add_user function
-    
+    var room;
+    var joined = false;
+
     //client emit events
+
+    //var clientsInRoom = io.nsps["/"].adapter.rooms['yay'].sockets;
+    //var numberOfClientsInRoom = Object.keys(clientsInRoom).length;
+
+    var rooms = io.nsps["/"].adapter.rooms;
+
+    var prekey;
+    for (var key in rooms) {
+        // skip loop if the property is from prototype
+        if (!rooms.hasOwnProperty(key)) continue;
+
+        var obj = rooms[key];
+        for (var prop in obj) {
+            // skip loop if the property is from prototype
+            if (!obj.hasOwnProperty(prop)) continue;
+
+            // your code
+            if (prop === "length") {
+                if (obj["length"] < 2) {
+                    prekey = key;
+                    socket.join(key);
+                    joined = true;
+                    room = key;
+                    console.log("join")
+                }
+                if (joined && prekey !== key){
+                    socket.leave(key);
+                    joined = false;
+                    console.log("leave")
+                }
+                console.log(obj["length"]);
+                console.log(key);
+            }
+        }
+    }
 
     // client emits new message
     socket.on('new message', (data) => {
@@ -46,7 +83,7 @@ io.on('connection', (socket) => {
 
     // client emits add user
     socket.on('add user', (username) => {
-        
+
         // if user is added, do nothing
         if (addedUser) return;
 
@@ -54,11 +91,11 @@ io.on('connection', (socket) => {
         socket.username = username;
         ++numUsers;// number of users increases by one
         addedUser = true;// user was added
-        
+
         socket.emit('login', {// client emits login
             numUsers: numUsers
         });
-        
+
         // suppress warning:
         // noinspection JSUnresolvedVariable
         socket.broadcast.emit('user joined', {// all connected clients get broadcasted
@@ -77,7 +114,6 @@ io.on('connection', (socket) => {
     });
 
 
-
     // client emits stop typing
     socket.on('stop typing', () => {
         // suppress warning:
@@ -90,12 +126,12 @@ io.on('connection', (socket) => {
 
     // client disconnects
     socket.on('disconnect', () => {
-        
+
         //if he was a registered user
         if (addedUser) {
-            
+
             --numUsers;//reduce number of current users
-            
+
             // suppress warning:
             // noinspection JSUnresolvedVariable
             socket.broadcast.emit('user left', {// broadcast that the user has disconnected
@@ -107,7 +143,7 @@ io.on('connection', (socket) => {
 
     // client emits a game action
     socket.on('gameClick', (id, username, mColor) => {
-        
+
         // if more than two clients have connected
         if (Object.keys(srvSockets).length > 1) {
 
@@ -117,33 +153,33 @@ io.on('connection', (socket) => {
 
             // if the column is valid and it is the players turn
             if (game.validMove(id) && player !== prevPlayer) {
-                
+
                 prevPlayer = player;// change to next player
                 game.play(username, id);// move gets played
             }
         }
     });
-    
+
     // function to implement the move
     game.on('play', function (player, coord) {
-        
+
         var coords = coord['col'] + ':' + coord['row'];// convert column and row to coordinates
         socket.broadcast.emit('played', coords, color);// broadcast coordinates
         socket.emit('played', coords, color);// client emits played
-        
+
         // if the user wins diagonally
         if (checkDiagonalWin()) {
-            
+
             game.end(player);// end the game with the current player as the winner
         }
     });
-    
+
     // function that checks for a winner (only works for horizontal and vertical wins)
     game.on('end', function (winner, gameState) {
-        
+
         socket.broadcast.emit('end', winner);// end of the game is broadcasted
         socket.emit('end', winner);// client emits the end
-        
+
         game = new Game({// game gets reset
             rows: 6,
             cols: 7
@@ -185,9 +221,7 @@ function checkDiagonalWin() {
         (game.get(3, 2) != null && game.get(3, 2) === game.get(2, 3) && game.get(3, 2) === game.get(1, 4) && game.get(3, 2) === game.get(0, 5))
     ) {
         return true;// true if one of these possibilities fits
-    }
-    
-    else {
+    } else {
         return false;// false if not
     }
 }
