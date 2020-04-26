@@ -1,13 +1,18 @@
 <!doctype html>
 <!--suppress HtmlUnknownTarget, JSUnresolvedLibraryURL -->
 <html lang="en">
+
+<!--header with title-->
 <head>
     <meta charset="UTF-8">
-    <title>Socket.IO Chat Example</title>
+    <title>Connect Four</title>
     <link href="style.css" rel="stylesheet">
 </head>
+
+<!--content-->
 <body>
 
+<!--page for the login-->
 <div class="login page">
     <div class="form">
         <h3 class="title">What's your nickname?</h3>
@@ -17,6 +22,7 @@
     </div>
 </div>
 
+<!--page for the result-->
 <div class="result page">
     <div class="form">
         <h3 class="title" id="result"></h3>
@@ -24,13 +30,19 @@
     </div>
 </div>
 
+<!--overlay that prevents one player from playing alone-->
 <div class="overlay page">
 </div>
 
+<!--area for the game-->
 <div class="connectfour">
+
+    <!--individual cells are arranged in a table consisting of 7 columns with 6 rows each-->
     <div class="table">
         <div class="header"><h1><span style="color:#e21400;">F</span><span style="color:#f8a700;">o</span><span style="color:#f78b00;">u</span><span style="color:#58dc00;">r</span>
             <span style="color:#287b00;">W</span><span style="color:#3b88eb;">i</span><span style="color:#a700ff;">n</span><span style="color:#d300e7;">s</span></h1></div>
+
+        <!-- column 1-->
         <div class="column" id="0">
             <div class="cell" coords="0:5">
                 <div class="chip"></div>
@@ -51,6 +63,8 @@
                 <div class="chip"></div>
             </div>
         </div>
+
+        <!-- column 2-->
         <div class="column" id="1">
             <div class="cell" coords="1:5">
                 <div class="chip"></div>
@@ -71,6 +85,8 @@
                 <div class="chip"></div>
             </div>
         </div>
+
+        <!-- column 3-->
         <div class="column" id="2">
             <div class="cell" coords="2:5">
                 <div class="chip"></div>
@@ -91,6 +107,8 @@
                 <div class="chip"></div>
             </div>
         </div>
+
+        <!-- column 4-->
         <div class="column" id="3">
             <div class="cell" coords="3:5">
                 <div class="chip"></div>
@@ -111,6 +129,8 @@
                 <div class="chip"></div>
             </div>
         </div>
+
+        <!-- column 5-->
         <div class="column" id="4">
             <div class="cell" coords="4:5">
                 <div class="chip"></div>
@@ -131,6 +151,8 @@
                 <div class="chip"></div>
             </div>
         </div>
+
+        <!-- column 6-->
         <div class="column" id="5">
             <div class="cell" coords="5:5">
                 <div class="chip"></div>
@@ -151,7 +173,10 @@
                 <div class="chip"></div>
             </div>
         </div>
-        <div style="border-style:none;" class="column" id="6">
+
+        <!-- column 7-->
+        <div class="column" id="6">
+
             <div class="cell" coords="6:5">
                 <div class="chip"></div>
             </div>
@@ -174,6 +199,7 @@
     </div>
 </div>
 
+<!--chat area-->
 <div class="chatBox">
     <ul class="pages">
         <li class="chat">
@@ -190,6 +216,7 @@
 <!--<iframe class="ad" width="560" height="315" src="https://www.youtube.com/embed/qzYBxlnBZ-0" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 </div>-->
 
+<!--script files to be implemented-->
 <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
 <script src="/socket.io/socket.io.js"></script>
 <script src="/js.js"></script>
