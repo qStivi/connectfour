@@ -1,157 +1,130 @@
-// set up basic express server
+// Setup basic express server
 const express = require('express');
 const app = express();
 const path = require('path');
 const server = require('http').createServer(app);
-const io = require('socket.io')(server);// server uses the socket.io library
-const port = process.env.PORT || 3000;// server port is 3000
-const Game = require('connect-four');// import connect four library
+const io = require('socket.io')(server);
+const port = process.env.PORT || 3000;
+const Game = require('connect-four');
 
 server.listen(port, () => {
-    console.log('Server listening at port %d', port);// logs server listening at port 3000
+    console.log('Server listening at port %d', port);
 });
 
-// routing
+// Routing
 app.use(express.static(path.join(__dirname, 'public')));
 
-let numUsers = 0;// variable for the number of users
+// Chat room
 
-var game = new Game({// game consists of 7x6 cells
+let numUsers = 0;
+
+var game = new Game({
     rows: 6,
     cols: 7
 });
 
-// variables for the game
 var color;
 var player;
 var prevPlayer;
 
-// once someone connects
 io.on('connection', (socket) => {
-    
-    var srvSockets = io.sockets.sockets;// client gets added to the socket
-    let addedUser = false;// boolean for add_user function
-    
-    //client emit events
+    var srvSockets = io.sockets.sockets;
+    let addedUser = false;
 
-    // client emits new message
+    // when the client emits 'new message', this listens and executes
     socket.on('new message', (data) => {
-
-        // username and message get broadcasted
+        // we tell the client to execute 'new message'
+        // noinspection JSUnresolvedVariable
         socket.broadcast.emit('new message', {
             username: socket.username,
             message: data
         });
     });
 
-    // client emits add user
+    // when the client emits 'add user', this listens and executes
     socket.on('add user', (username) => {
-        
-        // if user is added, do nothing
         if (addedUser) return;
 
-        // store username in socket
+        // we store the username in the socket session for this client
         socket.username = username;
-        ++numUsers;// number of users increases by one
-        addedUser = true;// user was added
-        
-        socket.emit('login', {// client emits login
+        ++numUsers;
+        addedUser = true;
+        socket.emit('login', {
             numUsers: numUsers
         });
-        
-        // suppress warning:
+        // echo globally (all clients) that a person has connected
         // noinspection JSUnresolvedVariable
-        socket.broadcast.emit('user joined', {// all connected clients get broadcasted
+        socket.broadcast.emit('user joined', {
             username: socket.username,
             numUsers: numUsers
         });
     });
 
-    // client emits typing
+    // when the client emits 'typing', we broadcast it to others
     socket.on('typing', () => {
-        // suppress warning:
         // noinspection JSUnresolvedVariable
-        socket.broadcast.emit('typing', {// typing is broadcasted
+        socket.broadcast.emit('typing', {
             username: socket.username
         });
     });
 
 
 
-    // client emits stop typing
+    // when the client emits 'stop typing', we broadcast it to others
     socket.on('stop typing', () => {
-        // suppress warning:
         // noinspection JSUnresolvedVariable
-        socket.broadcast.emit('stop typing', {// stop typing is broadcasted
+        socket.broadcast.emit('stop typing', {
             username: socket.username
         });
     });
 
 
-    // client disconnects
+    // when the user disconnects.. perform this
     socket.on('disconnect', () => {
-        
-        //if he was a registered user
         if (addedUser) {
-            
-            --numUsers;//reduce number of current users
-            
-            // suppress warning:
+            --numUsers;
+
+            // echo globally that this client has left
             // noinspection JSUnresolvedVariable
-            socket.broadcast.emit('user left', {// broadcast that the user has disconnected
+            socket.broadcast.emit('user left', {
                 username: socket.username,
                 numUsers: numUsers
             });
         }
     });
 
-    // client emits a game action
+
     socket.on('gameClick', (id, username, mColor) => {
-        
-        // if more than two clients have connected
         if (Object.keys(srvSockets).length > 1) {
 
-            color = mColor;// get colour of user
+            color = mColor;
 
-            player = username;// get username
+            player = username;
 
-            // if the column is valid and it is the players turn
             if (game.validMove(id) && player !== prevPlayer) {
-                
-                prevPlayer = player;// change to next player
-                game.play(username, id);// move gets played
+                prevPlayer = player;
+                game.play(username, id);
             }
         }
     });
-    
-    // function to implement the move
     game.on('play', function (player, coord) {
-        
-        var coords = coord['col'] + ':' + coord['row'];// convert column and row to coordinates
-        socket.broadcast.emit('played', coords, color);// broadcast coordinates
-        socket.emit('played', coords, color);// client emits played
-        
-        // if the user wins diagonally
+        var coords = coord['col'] + ':' + coord['row'];
+        socket.broadcast.emit('played', coords, color);
+        socket.emit('played', coords, color);
         if (checkDiagonalWin()) {
-            
-            game.end(player);// end the game with the current player as the winner
+            game.end(player);
         }
     });
-    
-    // function that checks for a winner (only works for horizontal and vertical wins)
     game.on('end', function (winner, gameState) {
-        
-        socket.broadcast.emit('end', winner);// end of the game is broadcasted
-        socket.emit('end', winner);// client emits the end
-        
-        game = new Game({// game gets reset
+        socket.broadcast.emit('end', winner);
+        socket.emit('end', winner);
+        game = new Game({
             rows: 6,
             cols: 7
         });
     });
 });
 
-// additional function to check all 24 possible diagonal wins
 function checkDiagonalWin() {
     if (
         (game.get(0, 0) != null && game.get(0, 0) === game.get(1, 1) && game.get(0, 0) === game.get(2, 2) && game.get(0, 0) === game.get(3, 3)) ||
@@ -184,10 +157,8 @@ function checkDiagonalWin() {
         (game.get(4, 2) != null && game.get(4, 2) === game.get(3, 3) && game.get(4, 2) === game.get(2, 4) && game.get(4, 2) === game.get(1, 5)) ||
         (game.get(3, 2) != null && game.get(3, 2) === game.get(2, 3) && game.get(3, 2) === game.get(1, 4) && game.get(3, 2) === game.get(0, 5))
     ) {
-        return true;// true if one of these possibilities fits
-    }
-    
-    else {
-        return false;// false if not
+        return true;
+    } else {
+        return false;
     }
 }
