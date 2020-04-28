@@ -16,65 +16,29 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 let numUsers = 0;// variable for the number of users
 
-var game = new Game({// game consists of 7x6 cells
+let game = new Game({// game consists of 7x6 cells
     rows: 6,
     cols: 7
 });
 
 // variables for the game
-var color;
-var player;
-var prevPlayer;
+let color;
+let player;
+let prevPlayer;
 
 // once someone connects
 io.on('connection', (socket) => {
 
-    var srvSockets = io.sockets.sockets;// client gets added to the socket
+    const srvSockets = io.sockets.sockets;// client gets added to the socket
     let addedUser = false;// boolean for add_user function
-    var room;
-    var joined = false;
 
     //client emit events
-
-    //var clientsInRoom = io.nsps["/"].adapter.rooms['yay'].sockets;
-    //var numberOfClientsInRoom = Object.keys(clientsInRoom).length;
-
-    var rooms = io.nsps["/"].adapter.rooms;
-
-    var prekey;
-    for (var key in rooms) {
-        // skip loop if the property is from prototype
-        if (!rooms.hasOwnProperty(key)) continue;
-
-        var obj = rooms[key];
-        for (var prop in obj) {
-            // skip loop if the property is from prototype
-            if (!obj.hasOwnProperty(prop)) continue;
-
-            // your code
-            if (prop === "length") {
-                if (obj["length"] < 2) {
-                    prekey = key;
-                    socket.join(key);
-                    joined = true;
-                    room = key;
-                    console.log("join")
-                }
-                if (joined && prekey !== key){
-                    socket.leave(key);
-                    joined = false;
-                    console.log("leave")
-                }
-                console.log(obj["length"]);
-                console.log(key);
-            }
-        }
-    }
 
     // client emits new message
     socket.on('new message', (data) => {
 
         // username and message get broadcasted
+        // noinspection JSUnresolvedVariable
         socket.broadcast.emit('new message', {
             username: socket.username,
             message: data
@@ -91,6 +55,11 @@ io.on('connection', (socket) => {
         socket.username = username;
         ++numUsers;// number of users increases by one
         addedUser = true;// user was added
+
+        socket.join('game');
+        if (numUsers > 2) {
+            socket.emit("spectator");
+        }
 
         socket.emit('login', {// client emits login
             numUsers: numUsers
@@ -151,33 +120,37 @@ io.on('connection', (socket) => {
 
             player = username;// get username
 
+
             // if the column is valid and it is the players turn
+            // noinspection JSUnresolvedFunction
             if (game.validMove(id) && player !== prevPlayer) {
 
                 prevPlayer = player;// change to next player
+                // noinspection JSUnresolvedFunction
                 game.play(username, id);// move gets played
             }
         }
     });
 
     // function to implement the move
+    // noinspection JSUnresolvedFunction
     game.on('play', function (player, coord) {
 
-        var coords = coord['col'] + ':' + coord['row'];// convert column and row to coordinates
-        socket.broadcast.emit('played', coords, color);// broadcast coordinates
+        const coords = coord['col'] + ':' + coord['row'];// convert column and row to coordinates
         socket.emit('played', coords, color);// client emits played
 
         // if the user wins diagonally
         if (checkDiagonalWin()) {
 
+            // noinspection JSUnresolvedFunction
             game.end(player);// end the game with the current player as the winner
         }
     });
 
     // function that checks for a winner (only works for horizontal and vertical wins)
-    game.on('end', function (winner, gameState) {
+    // noinspection JSUnresolvedFunction
+    game.on('end', function (winner) {
 
-        socket.broadcast.emit('end', winner);// end of the game is broadcasted
         socket.emit('end', winner);// client emits the end
 
         game = new Game({// game gets reset
@@ -189,8 +162,8 @@ io.on('connection', (socket) => {
 
 // additional function to check all 24 possible diagonal wins
 function checkDiagonalWin() {
-    if (
-        (game.get(0, 0) != null && game.get(0, 0) === game.get(1, 1) && game.get(0, 0) === game.get(2, 2) && game.get(0, 0) === game.get(3, 3)) ||
+    // noinspection JSUnresolvedFunction
+    return (game.get(0, 0) != null && game.get(0, 0) === game.get(1, 1) && game.get(0, 0) === game.get(2, 2) && game.get(0, 0) === game.get(3, 3)) ||
         (game.get(1, 0) != null && game.get(1, 0) === game.get(2, 1) && game.get(1, 0) === game.get(3, 2) && game.get(1, 0) === game.get(4, 3)) ||
         (game.get(2, 0) != null && game.get(2, 0) === game.get(3, 1) && game.get(2, 0) === game.get(4, 2) && game.get(2, 0) === game.get(5, 3)) ||
         (game.get(3, 0) != null && game.get(3, 0) === game.get(4, 1) && game.get(3, 0) === game.get(5, 2) && game.get(3, 0) === game.get(6, 3)) ||
@@ -218,10 +191,5 @@ function checkDiagonalWin() {
         (game.get(6, 2) != null && game.get(6, 2) === game.get(5, 3) && game.get(6, 2) === game.get(4, 4) && game.get(6, 2) === game.get(3, 5)) ||
         (game.get(5, 2) != null && game.get(5, 2) === game.get(4, 3) && game.get(5, 2) === game.get(3, 4) && game.get(5, 2) === game.get(2, 5)) ||
         (game.get(4, 2) != null && game.get(4, 2) === game.get(3, 3) && game.get(4, 2) === game.get(2, 4) && game.get(4, 2) === game.get(1, 5)) ||
-        (game.get(3, 2) != null && game.get(3, 2) === game.get(2, 3) && game.get(3, 2) === game.get(1, 4) && game.get(3, 2) === game.get(0, 5))
-    ) {
-        return true;// true if one of these possibilities fits
-    } else {
-        return false;// false if not
-    }
+        (game.get(3, 2) != null && game.get(3, 2) === game.get(2, 3) && game.get(3, 2) === game.get(1, 4) && game.get(3, 2) === game.get(0, 5));
 }

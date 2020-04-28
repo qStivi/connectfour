@@ -26,10 +26,13 @@ $(function () {
     let lastTypingTime;
     // suppressed Warning:
     // noinspection JSDeprecatedSymbols
-    let $currentInput = $usernameInput.focus();
+    let $currentInput;/* = $usernameInput.focus();*/
 
     // initialize socket
     const socket = io();
+
+    let spectator = false;
+
 
     // message for the number of current participants
     const addParticipantsMessage = (data) => {
@@ -270,7 +273,8 @@ $(function () {
 
             // suppress Warning:
             // noinspection JSDeprecatedSymbols
-            $currentInput.focus();
+            if ($currentInput != null)
+                $currentInput.focus();
         }
 
         // suppress Warning:
@@ -285,7 +289,6 @@ $(function () {
                 socket.emit('stop typing');
                 typing = false;
             } else {
-
                 // if client has no username, set one
                 setUsername();
             }
@@ -305,7 +308,8 @@ $(function () {
 
         // suppress warning:
         // noinspection JSDeprecatedSymbols
-        $currentInput.focus();
+        if ($currentInput != null)
+            $currentInput.focus();
     });
 
     // focus input when clicking message input
@@ -371,7 +375,6 @@ $(function () {
 
     // log own disconnetcion
     socket.on('disconnect', () => {
-
         log('you have been disconnected');
     });
 
@@ -391,10 +394,14 @@ $(function () {
         log('attempt to reconnect has failed');
     });
 
+    socket.on("spectator", () => {
+        spectator = true;
+        log("yay")
+    });
 
     // if div is clicked
     $('div').on('click', function () {
-        if ($(this).hasClass('column')) {// if div is a column
+        if ($(this).hasClass('column') && !spectator) {// if div is a column
             socket.emit('gameClick', $(this).attr('id'), username, $color)// click event for the game, sends coloumn, username and colour
         }
     });
