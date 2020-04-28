@@ -114,7 +114,7 @@ io.on('connection', (socket) => {
     socket.on('gameClick', (id, username, mColor) => {
 
         // if more than two clients have connected
-        if (Object.keys(srvSockets).length > 1) {
+        if (numUsers > 1) {
 
             color = mColor;// get colour of user
 

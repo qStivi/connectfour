@@ -26,7 +26,7 @@ $(function () {
     let lastTypingTime;
     // suppressed Warning:
     // noinspection JSDeprecatedSymbols
-    let $currentInput;/* = $usernameInput.focus();*/
+    let $currentInput = $usernameInput.focus();
 
     // initialize socket
     const socket = io();
@@ -273,8 +273,7 @@ $(function () {
 
             // suppress Warning:
             // noinspection JSDeprecatedSymbols
-            if ($currentInput != null)
-                $currentInput.focus();
+            $currentInput.focus();
         }
 
         // suppress Warning:
@@ -308,8 +307,7 @@ $(function () {
 
         // suppress warning:
         // noinspection JSDeprecatedSymbols
-        if ($currentInput != null)
-            $currentInput.focus();
+        $currentInput.focus();
     });
 
     // focus input when clicking message input
