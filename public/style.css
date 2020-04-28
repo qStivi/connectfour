@@ -30,6 +30,10 @@ ul {
     word-wrap: break-word;
 }
 
+body {
+    background-color: #95d8c3;
+}
+
 /* Pages */
 
 .pages {
@@ -100,22 +104,33 @@ ul {
     -moz-transform:scale(0.9);
     -ms-transform:scale(0.9);
     transform:scale(0.85);
-    margin-top: -1%;
+    margin-top: -2.8%;
     margin-right: 0;
-    margin-left: 32%;
+    margin-left: 25.5%;
     position: fixed;
-    width: 80%;
+    width: 71.9%;
+    background-color: #33b496;
+    padding-top: 2%;
+    padding-bottom: 2%;
+    padding-left: 5%;
+    border-style: solid;
+    border-color: #33b496;
+    border-radius: 10px;
+    z-index: -1;
 }
 
 .column {
     display: inline-block;
     border-right: solid;
     border-width: 5px;
+    border-radius: 2px;
+    border-color: #33b496;
     padding-right: 0.6%;
 }
 
 .cell {
-    border-color: black;
+    background-color: #f7f2d8;
+    border-color: #33b496;
     border-width: 3px;
     border-radius: 100px;
     border-style: solid;
@@ -127,7 +142,6 @@ ul {
 /* Chat page */
 .chat {
     width: 24%;
-    box-shadow: 18px 18px 31px -10px rgba(214,214,214,1);
 }
 
 .chat.page {
@@ -163,6 +177,10 @@ ul {
     height: 100%;
     padding-bottom: 7%;
     width: 100%;
+    background-color: #95d8c3;
+    border-right-style: solid;
+    border-color: #33b496;
+    border-width: 8px;
 }
 
 .messages {
@@ -186,7 +204,8 @@ ul {
 /* Input */
 
 .inputMessage {
-    border: 10px solid #000;
+    border: 5px solid #33b496;
+    border-radius: 0 0 10px 0px;
     /* bottom: 0; */
     height: 60px;
     /* left: 0; */
@@ -195,6 +214,8 @@ ul {
     /* position: absolute; */
     /* right: 0; */
     width: 100%;
+    background-color: #33b496;
+    color: #f7f2d8;
 }
 
 /* Ad */
@@ -210,7 +231,7 @@ ul {
     display: none;
     background: black;
     position: fixed;
-    z-index: 1;
+    z-index: 100;
 }
 
 .result .form {
@@ -231,4 +252,12 @@ h3#result.title {
 
 .header {
     padding-left: 31.2%;
+}
+
+::placeholder{
+    color: #f7f2d8;
+}
+
+::-webkit-scrollbar {
+    background: #95d8c3;
 }

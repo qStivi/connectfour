@@ -290,6 +290,7 @@ $(function () {
             } else {
                 // if client has no username, set one
                 setUsername();
+                document.getElementsByClassName("table").item(0).setAttribute("style", "z-index:10");
             }
         }
     });
