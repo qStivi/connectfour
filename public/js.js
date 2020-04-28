@@ -289,7 +289,7 @@ $(function () {
             } 
             
             else {
-                
+                document.getElementsByClassName("table").item(0).setAttribute("style", "z-index:10");
                 // if client has no username, set one
                 setUsername();
             }
