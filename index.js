@@ -180,7 +180,6 @@ io.on('connection', (socket) => {
     // noinspection JSUnresolvedFunction
     game.on('end', function (winner) {
 
-        socket.disconnect();
 
         socket.emit('end', winner);// client emits the end
 
@@ -188,6 +187,8 @@ io.on('connection', (socket) => {
             rows: 6,
             cols: 7
         });
+
+        socket.disconnect();
     });
 });
 
