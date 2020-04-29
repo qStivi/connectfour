@@ -25,6 +25,8 @@ let game = new Game({// game consists of 7x6 cells
 let color;
 let player;
 let prevPlayer;
+let player1;
+let player2;
 
 // once someone connects
 io.on('connection', (socket) => {
@@ -59,7 +61,14 @@ io.on('connection', (socket) => {
         socket.join('game');
         if (numUsers > 2) {
             socket.emit("spectator");
+        } else if (numUsers === 1) {
+            player1 = username;
+        } else if (numUsers === 2) {
+            player2 = username;
+            console.log(player1);
+            console.log(player2);
         }
+
 
         socket.emit('login', {// client emits login
             numUsers: numUsers
@@ -107,6 +116,17 @@ io.on('connection', (socket) => {
                 username: socket.username,
                 numUsers: numUsers
             });
+        }
+    });
+
+    socket.on('end game', (name) => {
+
+        if (name === player1) {
+            // noinspection JSUnresolvedFunction
+            game.end(player2);
+        } else if (name === player2) {
+            // noinspection JSUnresolvedFunction
+            game.end(player1);
         }
     });
 
