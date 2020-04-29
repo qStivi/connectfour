@@ -181,7 +181,11 @@ io.on('connection', (socket) => {
     game.on('end', function (winner) {
 
 
-        socket.emit('end', winner);// client emits the end
+        if (winner != null) {
+            socket.emit('end', winner);// client emits the end
+        } else {
+            socket.emit('end', "nobody")
+        }
 
         game = new Game({// game gets reset
             rows: 6,
