@@ -121,12 +121,15 @@ io.on('connection', (socket) => {
 
     socket.on('end game', (name) => {
 
-        if (name === player1) {
+        // noinspection JSUnresolvedVariable
+        if (name === player1 && !game.ended) {
             // noinspection JSUnresolvedFunction
             game.end(player2);
-        } else if (name === player2) {
-            // noinspection JSUnresolvedFunction
-            game.end(player1);
+        } else { // noinspection JSUnresolvedVariable
+            if (name === player2 && !game.ended) {
+                // noinspection JSUnresolvedFunction
+                game.end(player1);
+            }
         }
     });
 
