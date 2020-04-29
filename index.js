@@ -25,6 +25,8 @@ let game = new Game({// game consists of 7x6 cells
 let color;
 let player;
 let prevPlayer;
+let player1;
+let player2;
 
 // once someone connects
 io.on('connection', (socket) => {
@@ -59,6 +61,19 @@ io.on('connection', (socket) => {
         socket.join('game');
         if (numUsers > 2) {
             socket.emit("spectator");
+        } else if (numUsers === 1) {
+            player1 = username;
+        } else if (numUsers === 2) {
+            player2 = username;
+            console.log(player1);
+            console.log(player2);
+        }
+
+        if (numUsers < 1) {
+            game = new Game({// game consists of 7x6 cells
+                rows: 6,
+                cols: 7
+            });
         }
 
         socket.emit('login', {// client emits login
@@ -71,6 +86,10 @@ io.on('connection', (socket) => {
             username: socket.username,
             numUsers: numUsers
         });
+
+        // TODO
+        // jede spalte durchgehen und in jeder spalte jede reihe durch gehen
+        // dann jedes mal den namen den aktuellen feldes getten und dann socket.emit('played', coords, color);
     });
 
     // client emits typing
@@ -107,6 +126,20 @@ io.on('connection', (socket) => {
                 username: socket.username,
                 numUsers: numUsers
             });
+        }
+    });
+
+    socket.on('end game', (name) => {
+
+        // noinspection JSUnresolvedVariable
+        if (name === player1 && !game.ended) {
+            // noinspection JSUnresolvedFunction
+            game.end(player2);
+        } else { // noinspection JSUnresolvedVariable
+            if (name === player2 && !game.ended) {
+                // noinspection JSUnresolvedFunction
+                game.end(player1);
+            }
         }
     });
 
@@ -151,12 +184,19 @@ io.on('connection', (socket) => {
     // noinspection JSUnresolvedFunction
     game.on('end', function (winner) {
 
-        socket.emit('end', winner);// client emits the end
+
+        if (winner != null) {
+            socket.emit('end', winner);// client emits the end
+        } else {
+            socket.emit('end', "nobody")
+        }
 
         game = new Game({// game gets reset
             rows: 6,
             cols: 7
         });
+
+        socket.disconnect();
     });
 });
 

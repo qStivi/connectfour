@@ -325,7 +325,6 @@ $(function () {
 
     socket.on('connected', function () {
         socket.emit('joined');
-        log("yay")
     });
 
     // log a login message
@@ -358,6 +357,7 @@ $(function () {
         log(data.username + ' left');
         addParticipantsMessage(data);// update participants
         removeChatTyping(data);
+        socket.emit('end game', data.username);
     });
 
     // show "typing" message
