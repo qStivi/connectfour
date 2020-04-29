@@ -86,6 +86,10 @@ io.on('connection', (socket) => {
             username: socket.username,
             numUsers: numUsers
         });
+
+        // TODO
+        // jede spalte durchgehen und in jeder spalte jede reihe durch gehen
+        // dann jedes mal den namen den aktuellen feldes getten und dann socket.emit('played', coords, color);
     });
 
     // client emits typing
