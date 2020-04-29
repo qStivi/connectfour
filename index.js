@@ -69,6 +69,12 @@ io.on('connection', (socket) => {
             console.log(player2);
         }
 
+        if (numUsers < 1) {
+            game = new Game({// game consists of 7x6 cells
+                rows: 6,
+                cols: 7
+            });
+        }
 
         socket.emit('login', {// client emits login
             numUsers: numUsers
@@ -173,6 +179,8 @@ io.on('connection', (socket) => {
     // function that checks for a winner (only works for horizontal and vertical wins)
     // noinspection JSUnresolvedFunction
     game.on('end', function (winner) {
+
+        socket.disconnect();
 
         socket.emit('end', winner);// client emits the end
 
