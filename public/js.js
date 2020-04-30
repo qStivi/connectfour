@@ -207,7 +207,7 @@ $(function () {
             $messages.append($el);
         }
 
-        // scroll to the bottom of the chat
+        // update chat size
         $messages[0].scrollTop = $messages[0].scrollHeight;
     };
 
