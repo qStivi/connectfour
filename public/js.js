@@ -352,6 +352,7 @@ $(function () {
         log(message, {// log message
             prepend: true
         });
+        $currentInput.focus();
         addParticipantsMessage(data);// update participants after login
     });
 
@@ -372,6 +373,7 @@ $(function () {
     socket.on('user left', (data) => {
 
         log(data.username + ' left');
+        $currentInput.focus();
         addParticipantsMessage(data);// update participants
         removeChatTyping(data);
         socket.emit('end game', data.username);
@@ -392,11 +394,13 @@ $(function () {
     // log own disconnetcion
     socket.on('disconnect', () => {
         log('you have been disconnected');
+        $currentInput.focus();
     });
 
     // log own reconnection
     socket.on('reconnect', () => {
         log('you have been reconnected');
+        $currentInput.focus();
 
         // if client had a username, rejoin
         if (username) {
@@ -408,6 +412,7 @@ $(function () {
     socket.on('reconnect_error', () => {
 
         log('attempt to reconnect has failed');
+        $currentInput.focus();
     });
 
     socket.on("spectator", () => {
@@ -429,10 +434,13 @@ $(function () {
     socket.on('role', (role) => {
         if (role === "spectator") {
             log("You are a spectator.");
+            $currentInput.focus();
         } else if (role === "player1") {
             log("You are the first player");
+            $currentInput.focus();
         } else if (role === "player2") {
             log("You are the second player");
+            $currentInput.focus();
         }
     });
 
@@ -442,6 +450,7 @@ $(function () {
 
         if (name !== undefined) {
             log("It's " + name + "'s turn");
+            $currentInput.focus();
         }
 
         const cells = document.getElementsByClassName('cell');//get cells
