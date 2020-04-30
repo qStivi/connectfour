@@ -241,8 +241,9 @@ io.on('connection', (socket) => {
             rows: 6,
             cols: 7
         });
-
-        socket.disconnect();// users get disconnected
+        setTimeout(() => {
+            socket.disconnect();
+        }, 1000);// users get disconnected
     });
 });
 
