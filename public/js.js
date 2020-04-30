@@ -261,7 +261,7 @@ $(function () {
 
     // function for getting the colour from a user
     const getUsernameColor = (username) => {
-
+/*
         // colours get computed through a hash code
         let hash = 7;
 
@@ -273,6 +273,15 @@ $(function () {
         // calculate colour
         const index = Math.abs(hash % COLORS.length);
         return COLORS[index];// return colour
+        */
+        log(username);
+        log(player1);
+
+        if (username === player1) {
+            return "#2d4d67";
+        } else if (username === player2) {
+            return "#DE5F48";
+        } else return "#f7f2d8";
     };
 
     // suppress warning:

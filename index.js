@@ -45,6 +45,8 @@ io.on('connection', (socket) => {
     // client emits "new message"
     socket.on('new message', (data) => {
 
+        socket.emit('update usernames', player1, player2);
+
         // suppressed warning:
         // noinspection JSUnresolvedVariable
         socket.broadcast.emit('new message', {// username and message get broadcasted
@@ -109,17 +111,19 @@ io.on('connection', (socket) => {
                     socket.emit('played', coords, "#2d4d67");// emit his colour to the client
                 } 
                 else {
-                    
+
                     // suppressed warning:
                     // noinspection JSUnresolvedFunction
                     if (game.get(i, j) === player2) {// if cell belongs to player two
-                        
+
                         let coords = i + ":" + j;
                         socket.emit('played', coords, "#DE5F48");// emit his colour to the client
                     }
                 }
             }
         }
+
+        socket.emit('update usernames', player1, player2);
     });
 
     // client emits "typing"
