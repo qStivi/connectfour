@@ -17,6 +17,9 @@ html, input {
     Arial,
     "Lucida Grande",
     sans-serif;
+
+    -ms-overflow-style: none;
+    overflow: -moz-scrollbars-none;
 }
 
 html, body {
@@ -185,6 +188,7 @@ body {
     border-right-style: solid;
     border-color: #33b496;
     border-width: 8px;
+    -ms-overflow-style: none;
 }
 
 .messages {
@@ -270,4 +274,37 @@ h3#result.title {
     font-size: 70px;
     font-family: 'Nunito', sans-serif;
     margin-top: -8%;
+}
+
+.footer {
+    position: fixed;
+    right: 0;
+    left: 37.5%;
+    bottom: 0;
+    width: max-content;
+    color: white;
+    text-align: center;
+    z-index: -1;
+    padding: 10px;
+    background-color: #33b496;
+    margin-bottom: 10px;
+    border-style: solid;
+    border-color: #33b496;
+    border-radius: 10px;
+}
+
+.footer-content {
+    display: flex;
+}
+
+.bulletpoint-decoration {
+    list-style:none;
+    padding-left: 5px;
+    color: #f7f2d8;
+    font-size: 13px;
+}
+
+.footer a {
+    text-decoration: none;
+    color: #f7f2d8;
 }
