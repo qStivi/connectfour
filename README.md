@@ -19,3 +19,5 @@
 	 - Für die Serverkommunikation wurde die [Socket.io](https://socket.io) Library verwendet
 	 - Grundlage für unseren Lernprozess und den Code ist ein Codebeispiel von der Socket.io Website gewesen
 	 - Für das Spiel wurde die bereits existierende [ "connect-four"](https://github.com/bryanbraun/connect-four) Library verwendet. Weitere Funktionen wurden ergänzt
+	 - Die Seite ist nich mit dem Internet Explorer kompatibel
+	 - Bei Firefox ist eine Suchleiste seitlich leider noch sichtbar, dies lässt sich aufgrund der Machart des Browsers nicht ändern
