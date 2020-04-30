@@ -32,6 +32,9 @@ $(function () {
     // no spectators yet
     let spectator = false;
 
+    let player1;
+    let player2;
+
 
     // message for the number of current participants
     const addParticipantsMessage = (data) => {
@@ -39,7 +42,7 @@ $(function () {
         let message = '';// variable for the message
 
         if (data.numUsers === 1) {// singular message for one participant
-            
+
             message += "there's 1 participant";
         } 
         else {// plural if several participants
@@ -54,6 +57,10 @@ $(function () {
     const setUsername = () => {
 
         username = cleanInput($usernameInput.val().trim());// remove whitespaces, markup etc. from input
+
+        if (username === player1 || username === player2) {
+            username = randomStr(8, ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"]);
+        }
 
         // if username valid
         if (username) {
@@ -408,6 +415,11 @@ $(function () {
         }
     });
 
+    socket.on('update usernames', (name1, name2) => {
+        player1 = name1;
+        player2 = name2;
+    });
+
     // when someone has played
     socket.on('played', function (coord, color) {
 
@@ -430,3 +442,12 @@ $(function () {
         document.getElementsByClassName("result").item(0).setAttribute("style", "display:block");// show winner page
     });
 });
+
+function randomStr(len, arr) {
+    var ans = '';
+    for (var i = len; i > 0; i--) {
+        ans +=
+            arr[Math.floor(Math.random() * arr.length)];
+    }
+    return ans;
+}

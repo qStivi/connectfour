@@ -35,6 +35,9 @@ let cols = 7;
 // once someone connects
 io.on('connection', (socket) => {
 
+    socket.emit('update usernames', player1, player2);
+
+
     let addedUser = false;// boolean for add_user function
 
     // client emit events, server reacts
