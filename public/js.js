@@ -1,24 +1,23 @@
 $(function () {
 
     const FADE_TIME = 150; // 150 ms to fade the massage
-    const TYPING_TIMER_LENGTH = 400; // "typing" message only gets shown for 400 ms after users stops typing
+    const TYPING_TIMER_LENGTH = 400; // "typing" message only gets shown for 400 ms after user stops typing
     const COLORS = [// each user gets a different colour
         '#e21400', '#91580f', '#f8a700', '#f78b00',
         '#58dc00', '#287b00', '#a8f07a', '#4ae8c4',
         '#3b88eb', '#3824aa', '#a700ff', '#d300e7'
     ];
 
-    // variables
+    // website contents
     const $window = $(window);// window
     const $usernameInput = $('.usernameInput'); // username
     const $messages = $('.messages'); // message area
     const $inputMessage = $('.inputMessage'); // input for messages
-
     const $loginPage = $('.login.page'); // login page
     const $chatPage = $('.chat.page'); // ConnectFour page with chat box
 
 
-    // login prompt
+    // variables
     let username;
     let connected = false;
     let typing = false;
@@ -30,6 +29,7 @@ $(function () {
     // initialize socket
     const socket = io();
 
+    // no spectators yet
     let spectator = false;
 
 
@@ -39,8 +39,11 @@ $(function () {
         let message = '';// variable for the message
 
         if (data.numUsers === 1) {// singular message for one participant
+            
             message += "there's 1 participant";
-        } else {// plural if several participants
+        } 
+        else {// plural if several participants
+            
             message += "there are " + data.numUsers + " participants";
         }
 
@@ -59,11 +62,11 @@ $(function () {
             $loginPage.fadeOut();
             $chatPage.show();
             $loginPage.off('click');
-            //Suppressed Warning:
+            // suppressed Warning:
             // noinspection JSDeprecatedSymbols
             $currentInput = $inputMessage.focus();
 
-            // Server gets username
+            // server gets username
             socket.emit('add user', username);
         }
     };
@@ -263,19 +266,19 @@ $(function () {
         return COLORS[index];// return colour
     };
 
-    // suppress Warning:
+    // suppress warning:
     // noinspection JSDeprecatedSymbols
     $window.keydown(event => {// all Keyboard events
 
         // focus current input
         if (!(event.ctrlKey || event.metaKey || event.altKey)) {
 
-            // suppress Warning:
+            // suppress warning:
             // noinspection JSDeprecatedSymbols
             $currentInput.focus();
         }
 
-        // suppress Warning:
+        // suppress warning:
         // noinspection JSDeprecatedSymbols
         if (event.which === 13) {// if "enter" is pressed
 
