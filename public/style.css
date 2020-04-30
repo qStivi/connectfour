@@ -237,10 +237,9 @@ body {
 /* Result */
 .result {
     display: none;
-    background: black;
+    background: rgba(0,0,0,0.77);
     position: fixed;
     z-index: 100;
-    opacity: 77%;
 }
 
 .result .form {
