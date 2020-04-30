@@ -10,7 +10,7 @@
 	 - Die Plättchen verhalten sich wie Plättchen in einem realen Vier Gewinnt, d.h. sie "fallen zu Boden"
 	 - Weitere Clients können sich mit dem Spiel verbinden, sie sind Zuschauer und können keinen Einfluss auf das Spiel nehmen
 	 - Verlässt einer der Spieler das Spiel, gewinnt der andere Spieler
-	 - Gelingen einem Spieler vier Plättchen horizontal, vertikal oder diagonal, so gewinnt er und der Endbildschirm zeigt den Sieger an
+	 - Gelingt es einem Spieler, vier Plättchen horizontal, vertikal oder diagonal in einer Reihe zu legen, so gewinnt er und der Endbildschirm zeigt den Sieger an
 	 - Laden die Spieler dann die Website neu, so gelangen sie wieder zur Eingabe des Benutzernamens
 	 - Die ersten zwei Spieler, die ihren Namen mit [Enter] bestätigen, können wieder spielen
  - **Informationen**:
