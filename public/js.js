@@ -17,7 +17,6 @@ $(function () {
     const $loginPage = $('.login.page'); // login page
     const $chatPage = $('.chat.page'); // ConnectFour page with chat box
 
-    const $color = getRandomColor();// sets a random colour
 
     // login prompt
     let username;
@@ -401,15 +400,15 @@ $(function () {
     // if div is clicked
     $('div').on('click', function () {
         if ($(this).hasClass('column') && !spectator) {// if div is a column
-            socket.emit('gameClick', $(this).attr('id'), username, $color)// click event for the game, sends coloumn, username and colour
+            socket.emit('gameClick', $(this).attr('id'), username)// click event for the game, sends coloumn, username and colour
         }
     });
 
     // when someone has played
     socket.on('played', function (coord, color) {
 
-        var cells = document.getElementsByClassName('cell');//get cells
-        var length = cells.length;// get number of cells
+        const cells = document.getElementsByClassName('cell');//get cells
+        const length = cells.length;// get number of cells
         for (let i = 0; i < length; i++) { // for every cell
 
             // if cell is the clicked one
@@ -427,16 +426,3 @@ $(function () {
         document.getElementsByClassName("result").item(0).setAttribute("style", "display:block");// show winner page
     });
 });
-
-// function for creating a random number
-function getRandomColor() {
-
-    var letters = '0123456789ABCDEF';// hexadecimals
-    var color = '#';// colours start with "#"
-
-    for (var i = 0; i < 6; i++) {// add random letter six times
-
-        color += letters[Math.floor(Math.random() * 16)];
-    }
-    return color;//return finished string
-}

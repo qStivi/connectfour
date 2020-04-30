@@ -22,16 +22,16 @@ let game = new Game({// game consists of 7x6 cells
 });
 
 // variables for the game
-let color;
 let player;
 let prevPlayer;
 let player1;
 let player2;
+let rows = 6;
+let cols = 6;
 
 // once someone connects
 io.on('connection', (socket) => {
 
-    const srvSockets = io.sockets.sockets;// client gets added to the socket
     let addedUser = false;// boolean for add_user function
 
     //client emit events
@@ -87,9 +87,20 @@ io.on('connection', (socket) => {
             numUsers: numUsers
         });
 
-        // TODO
-        // jede spalte durchgehen und in jeder spalte jede reihe durch gehen
-        // dann jedes mal den namen den aktuellen feldes getten und dann socket.emit('played', coords, color);
+        for (let i = 0; i < cols; i++) {
+            for (let j = 0; j < rows; j++) {
+                // noinspection JSUnresolvedFunction
+                if (game.get(i, j) === player1) {
+                    let coords = i + ":" + j;
+                    socket.emit('played', coords, "#2d4d67");
+                } else { // noinspection JSUnresolvedFunction
+                    if (game.get(i, j) === player2) {
+                        let coords = i + ":" + j;
+                        socket.emit('played', coords, "#DE5F48");
+                    }
+                }
+            }
+        }
     });
 
     // client emits typing
@@ -144,12 +155,10 @@ io.on('connection', (socket) => {
     });
 
     // client emits a game action
-    socket.on('gameClick', (id, username, mColor) => {
+    socket.on('gameClick', (id, username) => {
 
         // if more than two clients have connected
         if (numUsers > 1) {
-
-            color = mColor;// get colour of user
 
             player = username;// get username
 
@@ -170,7 +179,11 @@ io.on('connection', (socket) => {
     game.on('play', function (player, coord) {
 
         const coords = coord['col'] + ':' + coord['row'];// convert column and row to coordinates
-        socket.emit('played', coords, color);// client emits played
+        if (player === player1) {
+            socket.emit('played', coords, "#2d4d67");
+        } else if (player === player2) {
+            socket.emit('played', coords, "#DE5F48");
+        } else console.log("ERROR");
 
         // if the user wins diagonally
         if (checkDiagonalWin()) {
