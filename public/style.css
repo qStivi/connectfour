@@ -240,6 +240,7 @@ body {
     background: black;
     position: fixed;
     z-index: 100;
+    opacity: 77%;
 }
 
 .result .form {
