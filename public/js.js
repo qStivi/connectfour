@@ -362,6 +362,7 @@ $(function () {
     socket.on('user joined', (data) => {
 
         log(data.username + ' joined');
+        $messages[0].scrollTop = $messages[0].scrollHeight;
         addParticipantsMessage(data);// update participants
     });
 
@@ -369,6 +370,7 @@ $(function () {
     socket.on('user left', (data) => {
 
         log(data.username + ' left');
+        $messages[0].scrollTop = $messages[0].scrollHeight;
         addParticipantsMessage(data);// update participants
         removeChatTyping(data);
         socket.emit('end game', data.username);
@@ -389,11 +391,13 @@ $(function () {
     // log own disconnetcion
     socket.on('disconnect', () => {
         log('you have been disconnected');
+        $messages[0].scrollTop = $messages[0].scrollHeight;
     });
 
     // log own reconnection
     socket.on('reconnect', () => {
         log('you have been reconnected');
+        $messages[0].scrollTop = $messages[0].scrollHeight;
 
         // if client had a username, rejoin
         if (username) {
@@ -405,6 +409,7 @@ $(function () {
     socket.on('reconnect_error', () => {
 
         log('attempt to reconnect has failed');
+        $messages[0].scrollTop = $messages[0].scrollHeight;
     });
 
     socket.on("spectator", () => {
@@ -426,10 +431,13 @@ $(function () {
     socket.on('role', (role) => {
         if (role === "spectator") {
             log("You are a spectator.");
+            $messages[0].scrollTop = $messages[0].scrollHeight;
         } else if (role === "player1") {
             log("You are the first player");
+            $messages[0].scrollTop = $messages[0].scrollHeight;
         } else if (role === "player2") {
             log("You are the second player");
+            $messages[0].scrollTop = $messages[0].scrollHeight;
         }
     });
 
@@ -439,6 +447,7 @@ $(function () {
 
         if (name !== undefined) {
             log("It's " + name + "'s turn");
+            $messages[0].scrollTop = $messages[0].scrollHeight;
         }
 
         const cells = document.getElementsByClassName('cell');//get cells
