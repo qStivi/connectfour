@@ -4,6 +4,7 @@
  - **Anleitung**:
 	 - Mit der Website verbinden
 	 - Einen Benutzernamen eingeben, [Enter] drücken
+	 - Kein Name wird nicht akzeptiert, ein doppelter Name wird durch einen zufälligen Namen ersetzt
 	 - Es erscheinen Spielfeld und Chat
 	 - Sobald zwei Spieler an diesem Punkt angelangt sind, können Chat und Spiel verwendet werden
 	 - Wer auch immer zuerst das Spielfeld anklickt, beginnt
