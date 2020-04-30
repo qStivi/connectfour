@@ -1,12 +1,8 @@
+// client-side stuff
 $(function () {
 
     const FADE_TIME = 150; // 150 ms to fade the massage
     const TYPING_TIMER_LENGTH = 400; // "typing" message only gets shown for 400 ms after user stops typing
-    const COLORS = [// each user gets a different colour
-        '#e21400', '#91580f', '#f8a700', '#f78b00',
-        '#58dc00', '#287b00', '#a8f07a', '#4ae8c4',
-        '#3b88eb', '#3824aa', '#a700ff', '#d300e7'
-    ];
 
     // website contents
     const $window = $(window);// window
@@ -58,6 +54,7 @@ $(function () {
 
         username = cleanInput($usernameInput.val().trim());// remove whitespaces, markup etc. from input
 
+        // if a username already exists, create a random one
         if (username === player1 || username === player2) {
             username = randomStr(8, ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"]);
         }
@@ -76,7 +73,7 @@ $(function () {
             // server gets username
             socket.emit('add user', username);
 
-            document.getElementsByClassName("table").item(0).setAttribute("style", "z-index:10");
+            document.getElementsByClassName("table").item(0).setAttribute("style", "z-index:10");// so that the player can actually click something
         }
     };
 
@@ -261,16 +258,6 @@ $(function () {
 
     // function for getting the colour from a user
     const getUsernameColor = (username) => {
-/*
-        // colours get computed through a hash code
-        let hash = 7;
-        for (let i = 0; i < username.length; i++) {
-            hash = username.charCodeAt(i) + (hash << 5) - hash;
-        }
-        // calculate colour
-        const index = Math.abs(hash % COLORS.length);
-        return COLORS[index];// return colour
-        */
 
         if (username === player1) {
             return "#2d4d67";
@@ -418,17 +405,24 @@ $(function () {
         }
     });
 
+    // player one and two get assigned their names
     socket.on('update usernames', (name1, name2) => {
         player1 = name1;
         player2 = name2;
     });
 
+    // assign roles to the clients through the chat
     socket.on('role', (role) => {
         if (role === "spectator") {
+            
             log("You are a spectator.");
-        } else if (role === "player1") {
+        } 
+        else if (role === "player1") {
+            
             log("You are the first player");
-        } else if (role === "player2") {
+        } 
+        else if (role === "player2") {
+            
             log("You are the second player");
         }
     });
@@ -436,9 +430,8 @@ $(function () {
     // when someone has played
     socket.on('played', function (coord, color, name) {
 
-
-        if (name !== undefined) {
-            log("It's " + name + "'s turn");
+        if (name !== undefined) {// if a spectator joins later on, the names would be "undefined", so these messages are made redundant
+            log("It's " + name + "'s turn");// log turn change in chat
         }
 
         const cells = document.getElementsByClassName('cell');//get cells
@@ -461,6 +454,7 @@ $(function () {
     });
 });
 
+// function for creating a random name
 function randomStr(len, arr) {
     var ans = '';
     for (var i = len; i > 0; i--) {
