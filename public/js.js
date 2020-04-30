@@ -414,7 +414,6 @@ $(function () {
 
     socket.on("spectator", () => {
         spectator = true;
-        log("yay")
     });
 
     // if div is clicked
@@ -429,8 +428,20 @@ $(function () {
         player2 = name2;
     });
 
+    socket.on('role', (role) => {
+        if (role === "spectator") {
+            log("You are a spectator.");
+        } else if (role === "player1") {
+            log("You are the first player");
+        } else if (role === "player2") {
+            log("You are the second player");
+        }
+    });
+
     // when someone has played
-    socket.on('played', function (coord, color) {
+    socket.on('played', function (coord, color, name) {
+
+        log("It's " + name + "'s turn");
 
         const cells = document.getElementsByClassName('cell');//get cells
         const length = cells.length;// get number of cells

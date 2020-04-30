@@ -70,10 +70,13 @@ io.on('connection', (socket) => {
         socket.join('game');
         if (numUsers > 2) {// if there are already two players
             socket.emit("spectator");// new user is registered as a spectator
+            socket.emit('role', "spectator");
         } else if (numUsers === 1) {// if new user is the first to connect, give him the role of first player
             player1 = username;
+            socket.emit('role', "player1");
         } else if (numUsers === 2) {// if new user is the second to connect, give him the role of second player
             player2 = username;
+            socket.emit('role', "player2");
         }
 
         // before anyone connects
@@ -215,9 +218,9 @@ io.on('connection', (socket) => {
 
         const coords = coord['col'] + ':' + coord['row'];// convert column and row to coordinates
         if (player === player1) {
-            socket.emit('played', coords, "#2d4d67");// player one is blue
+            socket.emit('played', coords, "#2d4d67", player2);// player one is blue
         } else if (player === player2) {
-            socket.emit('played', coords, "#DE5F48");// player two is red
+            socket.emit('played', coords, "#DE5F48", player1);// player two is red
         }
 
         // if the user wins diagonally
