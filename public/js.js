@@ -274,8 +274,6 @@ $(function () {
         const index = Math.abs(hash % COLORS.length);
         return COLORS[index];// return colour
         */
-        log(username);
-        log(player1);
 
         if (username === player1) {
             return "#2d4d67";
@@ -441,7 +439,10 @@ $(function () {
     // when someone has played
     socket.on('played', function (coord, color, name) {
 
-        log("It's " + name + "'s turn");
+
+        if (name !== undefined) {
+            log("It's " + name + "'s turn");
+        }
 
         const cells = document.getElementsByClassName('cell');//get cells
         const length = cells.length;// get number of cells
