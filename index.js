@@ -1,4 +1,7 @@
-// set up basic express server
+// server-side stuff
+// suppressed warnings are because of difficulties with our ide
+
+// setup for a basic express server
 const express = require('express');
 const app = express();
 const path = require('path');
@@ -27,30 +30,30 @@ let prevPlayer;
 let player1;
 let player2;
 let rows = 6;
-let cols = 6;
+let cols = 7;
 
 // once someone connects
 io.on('connection', (socket) => {
 
     let addedUser = false;// boolean for add_user function
 
-    //client emit events
+    // client emit events, server reacts
 
-    // client emits new message
+    // client emits "new message"
     socket.on('new message', (data) => {
 
-        // username and message get broadcasted
+        // suppressed warning:
         // noinspection JSUnresolvedVariable
-        socket.broadcast.emit('new message', {
+        socket.broadcast.emit('new message', {// username and message get broadcasted
             username: socket.username,
             message: data
         });
     });
 
-    // client emits add user
+    // client emits "add user"
     socket.on('add user', (username) => {
 
-        // if user is added, do nothing
+        // if user is already added, do nothing
         if (addedUser) return;
 
         // store username in socket
@@ -58,19 +61,19 @@ io.on('connection', (socket) => {
         ++numUsers;// number of users increases by one
         addedUser = true;// user was added
 
+        // assign roles to the users
         socket.join('game');
-        if (numUsers > 2) {
-            socket.emit("spectator");
-        } else if (numUsers === 1) {
+        if (numUsers > 2) {// if there are already two players
+            socket.emit("spectator");// new user is registered as a spectator
+        } else if (numUsers === 1) {// if new user is the first to connect, give him the role of first player
             player1 = username;
-        } else if (numUsers === 2) {
+        } else if (numUsers === 2) {// if new user is the second to connect, give him the role of second player
             player2 = username;
-            console.log(player1);
-            console.log(player2);
         }
 
+        // before anyone connects
         if (numUsers < 1) {
-            game = new Game({// game consists of 7x6 cells
+            game = new Game({// create game of 7x6 cells
                 rows: 6,
                 cols: 7
             });
@@ -87,23 +90,36 @@ io.on('connection', (socket) => {
             numUsers: numUsers
         });
 
+        // moves made before a spectator joined would be invisible to him
+        // this part esures, that he can see all the previous moves
+        // for every column
         for (let i = 0; i < cols; i++) {
+            
+            //for every row
             for (let j = 0; j < rows; j++) {
+                
+                // suppressed warning:
                 // noinspection JSUnresolvedFunction
-                if (game.get(i, j) === player1) {
+                if (game.get(i, j) === player1) {// if cell belongs to player one
+                    
                     let coords = i + ":" + j;
-                    socket.emit('played', coords, "#2d4d67");
-                } else { // noinspection JSUnresolvedFunction
-                    if (game.get(i, j) === player2) {
+                    socket.emit('played', coords, "#2d4d67");// emit his colour to the client
+                } 
+                else {
+                    
+                    // suppressed warning:
+                    // noinspection JSUnresolvedFunction
+                    if (game.get(i, j) === player2) {// if cell belongs to player two
+                        
                         let coords = i + ":" + j;
-                        socket.emit('played', coords, "#DE5F48");
+                        socket.emit('played', coords, "#DE5F48");// emit his colour to the client
                     }
                 }
             }
         }
     });
 
-    // client emits typing
+    // client emits "typing"
     socket.on('typing', () => {
         // suppress warning:
         // noinspection JSUnresolvedVariable
@@ -113,7 +129,7 @@ io.on('connection', (socket) => {
     });
 
 
-    // client emits stop typing
+    // client emits "stop typing"
     socket.on('stop typing', () => {
         // suppress warning:
         // noinspection JSUnresolvedVariable
@@ -140,16 +156,27 @@ io.on('connection', (socket) => {
         }
     });
 
+    // if someone leaves before the game has ended
+    // client emits end of game
     socket.on('end game', (name) => {
 
+        // suppressed warning:
         // noinspection JSUnresolvedVariable
-        if (name === player1 && !game.ended) {
+        if (name === player1 && !game.ended) {// if player one has left
+            
+            // suppressed warning:
             // noinspection JSUnresolvedFunction
-            game.end(player2);
-        } else { // noinspection JSUnresolvedVariable
-            if (name === player2 && !game.ended) {
+            game.end(player2);// player two wins
+        } 
+        else {
+            
+            // suppressed warning:
+            // noinspection JSUnresolvedVariable
+            if (name === player2 && !game.ended) {// if player two has left
+                
+                // suppressed warning
                 // noinspection JSUnresolvedFunction
-                game.end(player1);
+                game.end(player1);// player one wins
             }
         }
     });
@@ -162,46 +189,49 @@ io.on('connection', (socket) => {
 
             player = username;// get username
 
-
-            // if the column is valid and it is the players turn
+            // suppressed warning:
             // noinspection JSUnresolvedFunction
-            if (game.validMove(id) && player !== prevPlayer) {
+            if (game.validMove(id) && player !== prevPlayer) {// if the column is valid and it is the players turn
 
                 prevPlayer = player;// change to next player
+                // suppressed warning:
                 // noinspection JSUnresolvedFunction
                 game.play(username, id);// move gets played
             }
         }
     });
 
-    // function to implement the move
+    // this implements the move the client made
+    // suppressed warning:
     // noinspection JSUnresolvedFunction
     game.on('play', function (player, coord) {
 
         const coords = coord['col'] + ':' + coord['row'];// convert column and row to coordinates
         if (player === player1) {
-            socket.emit('played', coords, "#2d4d67");
+            socket.emit('played', coords, "#2d4d67");// player one is blue
         } else if (player === player2) {
-            socket.emit('played', coords, "#DE5F48");
-        } else console.log("ERROR");
+            socket.emit('played', coords, "#DE5F48");// player two is red
+        }
 
         // if the user wins diagonally
         if (checkDiagonalWin()) {
 
+            // suppressed warning:
             // noinspection JSUnresolvedFunction
             game.end(player);// end the game with the current player as the winner
         }
     });
 
     // function that checks for a winner (only works for horizontal and vertical wins)
+    // suppressed warning:
     // noinspection JSUnresolvedFunction
     game.on('end', function (winner) {
 
-
+        // if a player won
         if (winner != null) {
-            socket.emit('end', winner);// client emits the end
+            socket.emit('end', winner);// client emits the end with the winners name
         } else {
-            socket.emit('end', "nobody")
+            socket.emit('end', "nobody")// if the game ended in a draw, emit that nobody has won
         }
 
         game = new Game({// game gets reset
@@ -209,12 +239,13 @@ io.on('connection', (socket) => {
             cols: 7
         });
 
-        socket.disconnect();
+        socket.disconnect();// users get disconnected
     });
 });
 
 // additional function to check all 24 possible diagonal wins
 function checkDiagonalWin() {
+    // suppressed warning:
     // noinspection JSUnresolvedFunction
     return (game.get(0, 0) != null && game.get(0, 0) === game.get(1, 1) && game.get(0, 0) === game.get(2, 2) && game.get(0, 0) === game.get(3, 3)) ||
         (game.get(1, 0) != null && game.get(1, 0) === game.get(2, 1) && game.get(1, 0) === game.get(3, 2) && game.get(1, 0) === game.get(4, 3)) ||
