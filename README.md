@@ -18,6 +18,7 @@
  - **Informationen**:
 	 - Die Website wird über die Cloud-Platform "Heroku" (PaaS) gehostet, da unser kein physischer Server zur Verfügung stand
 	 - Das Spiel ist erreichbar unter [https://qconnectfour.herokuapp.com/](https://qconnectfour.herokuapp.com/ "https://qconnectfour.herokuapp.com/")
+	 - Nach längerer Inaktiviät geht der Server in einen "Schlafmodus". Daher kann das erste Öffnen einige Sekunden länger dauern als üblich
 	 - Für die Serverkommunikation wurde die [Socket.io](https://socket.io) Library verwendet
 	 - Grundlage für unseren Lernprozess und den Code ist ein Codebeispiel von der Socket.io Website gewesen
 	 - Für das Spiel wurde auch die bereits existierende [ "connect-four"](https://github.com/bryanbraun/connect-four) Library verwendet. Weitere Funktionen wurden ergänzt
